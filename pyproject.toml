@@ -1,0 +1,31 @@
+[project]
+name = "micrograd"
+version = "0.1.0"
+description = "The spelled-out intro to neural networks and backpropagation"
+readme = "README.md"
+authors = [{ name = "Scott Stevenson", email = "scott@stevenson.io" }]
+requires-python = ">=3.13"
+dependencies = []
+
+[project.scripts]
+micrograd = "micrograd:main"
+
+[dependency-groups]
+dev = ["basedpyright>=1.31.0", "ruff>=0.12.5"]
+
+[build-system]
+requires = ["uv_build>=0.8.2,<0.9.0"]
+build-backend = "uv_build"
+
+[tool.basedpyright]
+typeCheckingMode = "recommended"
+
+[tool.ruff.format]
+skip-magic-trailing-comma = true
+
+[tool.ruff.lint]
+ignore = ["D203", "D213", "COM812"]
+select = ["ALL"]
+
+[tool.ruff.lint.isort]
+split-on-trailing-comma = false
