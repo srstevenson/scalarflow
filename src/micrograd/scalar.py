@@ -17,7 +17,7 @@ class Scalar:
         return f"{self.__class__.__name__}(data={self.data})"
 
     def __neg__(self) -> Scalar:
-        return Scalar(-self.data, (self,))
+        return -1 * self
 
     def __pow__(self, other: Scalar | float) -> Scalar:
         if isinstance(other, Scalar):
