@@ -36,9 +36,6 @@ def visualise(root: Scalar) -> graphviz.Digraph:
             dot.edge(f"op_{id(node)}", f"data_{id(node)}")  # pyright: ignore[reportUnknownMemberType]
 
     for parent, child in graph.edges:
-        if child.op:
-            dot.edge(f"data_{id(parent)}", f"op_{id(child)}")  # pyright: ignore[reportUnknownMemberType]
-        else:
-            dot.edge(f"data_{id(parent)}", f"data_{id(child)}")  # pyright: ignore[reportUnknownMemberType]
+        dot.edge(f"data_{id(parent)}", f"op_{id(child)}")  # pyright: ignore[reportUnknownMemberType]
 
     return dot
