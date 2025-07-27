@@ -5,7 +5,7 @@ description = "The spelled-out intro to neural networks and backpropagation"
 readme = "README.md"
 authors = [{ name = "Scott Stevenson", email = "scott@stevenson.io" }]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = ["graphviz>=0.21"]
 
 [project.scripts]
 micrograd = "micrograd:main"
@@ -19,6 +19,7 @@ build-backend = "uv_build"
 
 [tool.basedpyright]
 typeCheckingMode = "recommended"
+reportUnusedCallResult = false
 
 [tool.ruff.format]
 skip-magic-trailing-comma = true
