@@ -55,7 +55,7 @@ def test__traverse__nodes_completeness() -> None:
     c = Scalar(3.0)
     result = (a + b) * c
     graph = traverse(result)
-    intermediate = next(child for child in result.children if child != c)
+    intermediate = next(dep for dep in result.deps if dep != c)
     assert graph.nodes == {a, b, c, intermediate, result}
 
 

@@ -8,9 +8,9 @@ if TYPE_CHECKING:
 
 
 class Scalar:
-    def __init__(self, data: float, children: Iterable[Scalar] = ()) -> None:
+    def __init__(self, data: float, deps: Iterable[Scalar] = ()) -> None:
         self.data: float = data
-        self.children: frozenset[Scalar] = frozenset(children)
+        self.deps: frozenset[Scalar] = frozenset(deps)
 
     @override
     def __repr__(self) -> str:
