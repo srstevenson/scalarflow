@@ -27,6 +27,7 @@ skip-magic-trailing-comma = true
 [tool.ruff.lint]
 ignore = ["D", "COM812", "TD003"]
 select = ["ALL"]
+allowed-confusables = ["×"]
 
 [tool.ruff.lint.isort]
 split-on-trailing-comma = false
