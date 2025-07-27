@@ -24,7 +24,7 @@ typeCheckingMode = "recommended"
 skip-magic-trailing-comma = true
 
 [tool.ruff.lint]
-ignore = ["D", "COM812"]
+ignore = ["D", "COM812", "TD003"]
 select = ["ALL"]
 
 [tool.ruff.lint.isort]
