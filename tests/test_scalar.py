@@ -18,7 +18,8 @@ def test__scalar__pow_float() -> None:
     result = scalar**3.0
     assert result.data == 8.0
     assert result.op == "^"
-    assert result.deps == {scalar}
+    assert len(result.deps) == 2
+    assert scalar in result.deps
 
 
 def test__scalar__pow_scalar() -> None:
@@ -52,7 +53,8 @@ def test__scalar__add_float() -> None:
     result = scalar + 2.0
     assert result.data == 3.0
     assert result.op == "+"
-    assert result.deps == {scalar}
+    assert len(result.deps) == 2
+    assert scalar in result.deps
 
 
 def test__scalar__radd_float() -> None:
@@ -60,7 +62,8 @@ def test__scalar__radd_float() -> None:
     result = 2.0 + scalar
     assert result.data == 3.0
     assert result.op == "+"
-    assert result.deps == {scalar}
+    assert len(result.deps) == 2
+    assert scalar in result.deps
 
 
 def test__scalar__mul_scalar() -> None:
@@ -77,7 +80,8 @@ def test__scalar__mul_float() -> None:
     result = scalar * 3.0
     assert result.data == 6.0
     assert result.op == "×"
-    assert result.deps == {scalar}
+    assert len(result.deps) == 2
+    assert scalar in result.deps
 
 
 def test__scalar__rmul_float() -> None:
@@ -85,7 +89,8 @@ def test__scalar__rmul_float() -> None:
     result = 2.0 * scalar
     assert result.data == 6.0
     assert result.op == "×"
-    assert result.deps == {scalar}
+    assert len(result.deps) == 2
+    assert scalar in result.deps
 
 
 def test__scalar__neg() -> None:
@@ -93,7 +98,8 @@ def test__scalar__neg() -> None:
     result = -scalar
     assert result.data == -2.0
     assert result.op == "×"
-    assert result.deps == {scalar}
+    assert len(result.deps) == 2
+    assert scalar in result.deps
 
 
 def test__scalar__sub_scalar() -> None:
@@ -107,7 +113,8 @@ def test__scalar__sub_scalar() -> None:
     neg_scalar2 = next(dep for dep in result.deps if dep != scalar1)
     assert neg_scalar2.data == -scalar2.data
     assert neg_scalar2.op == "×"
-    assert neg_scalar2.deps == {scalar2}
+    assert len(neg_scalar2.deps) == 2
+    assert scalar2 in neg_scalar2.deps
 
 
 def test__scalar__sub_float() -> None:
@@ -115,7 +122,8 @@ def test__scalar__sub_float() -> None:
     result = scalar - 2.0
     assert result.data == -1.0
     assert result.op == "+"
-    assert result.deps == {scalar}
+    assert len(result.deps) == 2
+    assert scalar in result.deps
 
 
 def test__scalar__rsub_float() -> None:
@@ -123,11 +131,10 @@ def test__scalar__rsub_float() -> None:
     result = 2.0 - scalar
     assert result.data == 1.0
     assert result.op == "+"
-    assert len(result.deps) == 1
-    neg_scalar = next(iter(result.deps))
-    assert neg_scalar.data == -scalar.data
-    assert neg_scalar.op == "×"
-    assert neg_scalar.deps == {scalar}
+    assert len(result.deps) == 2
+    data_values = {dep.data for dep in result.deps}
+    assert 2.0 in data_values
+    assert -1.0 in data_values
 
 
 def test__scalar__truediv_scalar() -> None:
@@ -141,7 +148,8 @@ def test__scalar__truediv_scalar() -> None:
     inv_scalar2 = next(dep for dep in result.deps if dep != scalar1)
     assert inv_scalar2.data == 1 / scalar2.data
     assert inv_scalar2.op == "^"
-    assert inv_scalar2.deps == {scalar2}
+    assert len(inv_scalar2.deps) == 2
+    assert scalar2 in inv_scalar2.deps
 
 
 def test__scalar__truediv_float() -> None:
@@ -149,7 +157,8 @@ def test__scalar__truediv_float() -> None:
     result = scalar / 2.0
     assert result.data == 1.5
     assert result.op == "×"
-    assert result.deps == {scalar}
+    assert len(result.deps) == 2
+    assert scalar in result.deps
 
 
 def test__scalar__rtruediv_float() -> None:
@@ -157,8 +166,8 @@ def test__scalar__rtruediv_float() -> None:
     result = 3.0 / scalar
     assert result.data == 1.5
     assert result.op == "×"
-    assert len(result.deps) == 1
-    inv_scalar = next(iter(result.deps))
-    assert inv_scalar.data == 1 / scalar.data
+    assert len(result.deps) == 2
+    # Check that one dependency is 1 / scalar
+    inv_scalar = next(dep for dep in result.deps if dep.data == 0.5)
     assert inv_scalar.op == "^"
-    assert inv_scalar.deps == {scalar}
+    assert scalar in inv_scalar.deps

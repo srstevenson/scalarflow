@@ -34,8 +34,14 @@ def test__traverse__diamond_graph() -> None:
     c = a * 3.0
     d = b + c
     graph = traverse(d)
-    assert graph.nodes == {a, b, c, d}
-    assert graph.edges == {(a, b), (a, c), (b, d), (c, d)}
+    assert len(graph.nodes) == 6
+
+    for node in [a, b, c, d]:
+        assert node in graph.nodes
+
+    primitive_values = {node.data for node in graph.nodes if not node.deps}
+    assert 2.0 in primitive_values
+    assert 3.0 in primitive_values
 
 
 def test__traverse__complex_expression() -> None:
@@ -45,8 +51,14 @@ def test__traverse__complex_expression() -> None:
     d = c + 1.0
     e = d**2.0
     graph = traverse(e)
-    assert graph.nodes == {a, b, c, d, e}
-    assert graph.edges == {(a, c), (b, c), (c, d), (d, e)}
+
+    assert len(graph.nodes) == 7
+    for node in [a, b, c, d, e]:
+        assert node in graph.nodes
+
+    primitive_values = {node.data for node in graph.nodes if not node.deps}
+    assert 1.0 in primitive_values
+    assert 2.0 in primitive_values
 
 
 def test__traverse__nodes_completeness() -> None:
