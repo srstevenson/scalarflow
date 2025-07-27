@@ -30,9 +30,15 @@ def visualise(root: Scalar) -> graphviz.Digraph:
     dot.attr(rankdir="LR")  # pyright: ignore[reportUnknownMemberType]
 
     for node in graph.nodes:
-        dot.node(str(id(node)), shape="ellipse", label=f"{node.data}")  # pyright: ignore[reportUnknownMemberType]
+        dot.node(f"data_{id(node)}", shape="ellipse", label=f"{node.data}")  # pyright: ignore[reportUnknownMemberType]
+        if node.op:
+            dot.node(f"op_{id(node)}", shape="box", label=node.op)  # pyright: ignore[reportUnknownMemberType]
+            dot.edge(f"op_{id(node)}", f"data_{id(node)}")  # pyright: ignore[reportUnknownMemberType]
 
     for parent, child in graph.edges:
-        dot.edge(str(id(parent)), str(id(child)))  # pyright: ignore[reportUnknownMemberType]
+        if child.op:
+            dot.edge(f"data_{id(parent)}", f"op_{id(child)}")  # pyright: ignore[reportUnknownMemberType]
+        else:
+            dot.edge(f"data_{id(parent)}", f"data_{id(child)}")  # pyright: ignore[reportUnknownMemberType]
 
     return dot

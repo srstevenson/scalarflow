@@ -75,7 +75,7 @@ def test__visualise__linear_chain() -> None:
     assert "1.0" in dot.source
     assert "2.0" in dot.source
     assert "3.0" in dot.source
-    assert dot.source.count("->") == 2
+    assert dot.source.count("->") == 3
 
 
 def test__visualise__complex_graph() -> None:
@@ -101,10 +101,62 @@ def test__visualise__edge_relationships() -> None:
     c = a + b
     graph = traverse(c)
     dot = visualise(c)
-    assert dot.source.count("->") == len(graph.edges)
+    # We have graph.edges, plus 1 (op, data) edge
+    assert dot.source.count("->") == len(graph.edges) + 1
 
 
 def test__visualise__rankdir_attribute() -> None:
     a = Scalar(1.0)
     dot = visualise(a)
     assert "rankdir=LR" in dot.source
+
+
+def test__visualise__operation_nodes() -> None:
+    a = Scalar(1.0)
+    b = Scalar(2.0)
+    c = a + b
+    dot = visualise(c)
+    source = dot.source
+    assert 'label="+"' in source
+    assert "shape=box" in source
+
+
+def test__visualise__operation_node_shapes() -> None:
+    a = Scalar(2.0)
+    b = Scalar(3.0)
+    c = a * b
+    dot = visualise(c)
+    source = dot.source
+    assert 'label="×"' in source
+    assert "shape=box" in source
+    assert "shape=ellipse" in source
+
+
+def test__visualise__operation_to_data_edges() -> None:
+    a = Scalar(1.0)
+    b = Scalar(2.0)
+    c = a + b
+    dot = visualise(c)
+    # We have an (op_id, data_id) edge
+    assert "op_" in dot.source
+    assert "data_" in dot.source
+
+
+def test__visualise__multiple_operations() -> None:
+    a = Scalar(2.0)
+    b = Scalar(3.0)
+    c = a * b
+    d = c + 1.0
+    dot = visualise(d)
+    assert 'label="×"' in dot.source
+    assert 'label="+"' in dot.source
+    assert dot.source.count("shape=box") == 2
+    assert dot.source.count("shape=ellipse") >= 3
+
+
+def test__visualise__power_operation() -> None:
+    a = Scalar(2.0)
+    b = a**3.0
+    dot = visualise(b)
+    assert 'label="^"' in dot.source
+    assert "shape=box" in dot.source
