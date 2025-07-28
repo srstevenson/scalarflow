@@ -31,14 +31,6 @@ def test__scalar__pow_scalar() -> None:
     assert result.deps == {scalar1, scalar2}
 
 
-def test__scalar__rpow() -> None:
-    scalar = Scalar(3.0)
-    result = 2.0**scalar
-    assert result.data == 8.0
-    assert result.op == "^"
-    assert result.deps == {scalar}
-
-
 def test__scalar__add_scalar() -> None:
     scalar1 = Scalar(1.0)
     scalar2 = Scalar(2.0)
@@ -51,15 +43,6 @@ def test__scalar__add_scalar() -> None:
 def test__scalar__add_float() -> None:
     scalar = Scalar(1.0)
     result = scalar + 2.0
-    assert result.data == 3.0
-    assert result.op == "+"
-    assert len(result.deps) == 2
-    assert scalar in result.deps
-
-
-def test__scalar__radd_float() -> None:
-    scalar = Scalar(1.0)
-    result = 2.0 + scalar
     assert result.data == 3.0
     assert result.op == "+"
     assert len(result.deps) == 2
@@ -80,6 +63,33 @@ def test__scalar__mul_float() -> None:
     result = scalar * 3.0
     assert result.data == 6.0
     assert result.op == "×"
+    assert len(result.deps) == 2
+    assert scalar in result.deps
+
+
+def test__scalar__rpow_float() -> None:
+    scalar = Scalar(3.0)
+    result = 2.0**scalar
+    assert result.data == 8.0
+    assert result.op == "^"
+    assert len(result.deps) == 2
+    assert scalar in result.deps
+
+
+def test__scalar__rpow_scalar() -> None:
+    scalar1 = Scalar(2.0)
+    scalar2 = Scalar(3.0)
+    result = scalar1**scalar2
+    assert result.data == 8.0
+    assert result.op == "^"
+    assert result.deps == {scalar1, scalar2}
+
+
+def test__scalar__radd_float() -> None:
+    scalar = Scalar(1.0)
+    result = 2.0 + scalar
+    assert result.data == 3.0
+    assert result.op == "+"
     assert len(result.deps) == 2
     assert scalar in result.deps
 

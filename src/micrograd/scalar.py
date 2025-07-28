@@ -21,19 +21,20 @@ class Scalar:
         other = Scalar(other) if not isinstance(other, Scalar) else other
         return Scalar(math.pow(self.data, other.data), "^", (self, other))
 
-    def __rpow__(self, other: float) -> Scalar:
-        return Scalar(math.pow(other, self.data), "^", (self,))
-
     def __add__(self, other: Scalar | float) -> Scalar:
         other = Scalar(other) if not isinstance(other, Scalar) else other
         return Scalar(self.data + other.data, "+", (self, other))
 
-    def __radd__(self, other: float) -> Scalar:
-        return self + other
-
     def __mul__(self, other: Scalar | float) -> Scalar:
         other = Scalar(other) if not isinstance(other, Scalar) else other
         return Scalar(self.data * other.data, "×", (self, other))
+
+    def __rpow__(self, other: Scalar | float) -> Scalar:
+        other = Scalar(other) if not isinstance(other, Scalar) else other
+        return other**self
+
+    def __radd__(self, other: float) -> Scalar:
+        return self + other
 
     def __rmul__(self, other: float) -> Scalar:
         return self * other
