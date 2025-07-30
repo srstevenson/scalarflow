@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+from graphlib import TopologicalSorter
 from typing import TYPE_CHECKING, override
 
 if TYPE_CHECKING:
@@ -76,3 +77,17 @@ class Scalar:
 
     def __rtruediv__(self, other: float) -> Scalar:
         return other * self**-1
+
+    def backward(self) -> None:
+        self.grad = 1.0
+
+        graph: dict[Scalar, frozenset[Scalar]] = {}
+        stack: list[Scalar] = [self]
+        while stack:
+            node = stack.pop()
+            graph[node] = node.deps
+            stack.extend([dep for dep in node.deps if dep not in graph])
+
+        ts: TopologicalSorter[Scalar] = TopologicalSorter(graph)
+        for node in reversed(list(ts.static_order())):
+            node._backward()  # noqa: SLF001

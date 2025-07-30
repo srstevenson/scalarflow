@@ -185,7 +185,7 @@ def test__scalar__rtruediv_float() -> None:
     assert scalar in inv_scalar.deps
 
 
-def test__scalar__add_backward() -> None:
+def test__scalar__add__backward() -> None:
     x = Scalar(2.0)
     y = Scalar(3.0)
     z = x + y
@@ -197,7 +197,7 @@ def test__scalar__add_backward() -> None:
     assert y.grad == 1.0
 
 
-def test__scalar__mul_backward() -> None:
+def test__scalar__mul__backward() -> None:
     x = Scalar(2.0)
     y = Scalar(3.0)
     z = x * y
@@ -209,7 +209,7 @@ def test__scalar__mul_backward() -> None:
     assert y.grad == 2.0
 
 
-def test__scalar__pow_backward() -> None:
+def test__scalar__pow__backward() -> None:
     x = Scalar(2.0)
     y = Scalar(3.0)
     z = x**y
@@ -220,3 +220,74 @@ def test__scalar__pow_backward() -> None:
     # For z = x^y: ∂z/∂y = x^y * ln(x) = 8 * ln(2)
     assert x.grad == 12.0
     assert y.grad == 8.0 * math.log(2.0)
+
+
+def test__scalar__backward_single_node() -> None:
+    x = Scalar(5.0)
+    x.backward()
+
+    assert x.grad == 1.0
+
+
+def test__scalar__backward_simple_chain() -> None:
+    # Compute z = x + y
+    x = Scalar(2.0)
+    y = Scalar(3.0)
+    z = x + y
+    z.backward()
+
+    # Check all gradients are computed correctly
+    assert z.grad == 1.0  # Output gradient
+    assert x.grad == 1.0  # ∂z/∂x = 1
+    assert y.grad == 1.0  # ∂z/∂y = 1
+
+
+def test__scalar__backward_complex_expression() -> None:
+    # Compute z = (x * y) + (x ** 2)
+    x = Scalar(2.0)
+    y = Scalar(3.0)
+    z = (x * y) + (x**2)
+    z.backward()
+
+    # z = 2*3 + 2^2 = 6 + 4 = 10
+    # ∂z/∂x = y + 2*x = 3 + 2*2 = 7
+    # ∂z/∂y = x = 2
+    assert z.grad == 1.0
+    assert x.grad == 7.0
+    assert y.grad == 2.0
+
+
+def test__scalar__backward_nested_operations() -> None:
+    # Compute z = (x + y) * (x - y)
+    x = Scalar(3.0)
+    y = Scalar(2.0)
+    z = (x + y) * (x - y)
+    z.backward()
+
+    # z = (3+2) * (3-2) = 5 * 1 = 5
+    # ∂z/∂x = (x-y) + (x+y) = 1 + 5 = 6
+    # ∂z/∂y = (x-y) + (x+y) * (-1) = 1 - 5 = -4
+    assert z.grad == 1.0
+    assert x.grad == 6.0
+    assert y.grad == -4.0
+
+
+def test__scalar__backward_power_chain() -> None:
+    # Compute w = (x ** y) ** z
+    x = Scalar(2.0)
+    y = Scalar(3.0)
+    z = Scalar(2.0)
+    u = x**y  # u = 2^3 = 8
+    w = u**z  # w = 8^2 = 64
+    w.backward()
+
+    # ∂w/∂u = z * u^(z-1) = 2 * 8^1 = 16
+    # ∂u/∂x = y * x^(y-1) = 3 * 2^2 = 12
+    # ∂u/∂y = u * ln(x) = 8 * ln(2)
+    # Chain rule: ∂w/∂x = ∂w/∂u * ∂u/∂x = 16 * 12 = 192
+    # Chain rule: ∂w/∂y = ∂w/∂u * ∂u/∂y = 16 * 8 * ln(2)
+    # ∂w/∂z = w * ln(u) = 64 * ln(8)
+    assert w.grad == 1.0
+    assert x.grad == 192.0
+    assert y.grad == 16.0 * 8.0 * math.log(2.0)
+    assert z.grad == 64.0 * math.log(8.0)
