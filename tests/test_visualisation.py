@@ -104,7 +104,7 @@ def test__visualise__node_attributes() -> None:
     a = Scalar(1.0)
     dot = visualise(a)
     assert "shape=ellipse" in dot.source
-    assert "label=1.0" in dot.source
+    assert 'label="data=1.0, grad=0.0"' in dot.source
 
 
 def test__visualise__edge_relationships() -> None:

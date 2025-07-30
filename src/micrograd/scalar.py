@@ -4,14 +4,16 @@ import math
 from typing import TYPE_CHECKING, override
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable
+    from collections.abc import Callable, Iterable
 
 
 class Scalar:
     def __init__(self, data: float, op: str = "", deps: Iterable[Scalar] = ()) -> None:
         self.data: float = data
+        self.grad: float = 0.0
         self.op: str = op
         self.deps: frozenset[Scalar] = frozenset(deps)
+        self._backward: Callable[[], None] = lambda: None
 
     @override
     def __repr__(self) -> str:
@@ -19,15 +21,36 @@ class Scalar:
 
     def __pow__(self, other: Scalar | float) -> Scalar:
         other = Scalar(other) if not isinstance(other, Scalar) else other
-        return Scalar(math.pow(self.data, other.data), "^", (self, other))
+        result = Scalar(math.pow(self.data, other.data), "^", (self, other))
+
+        def backward() -> None:
+            self.grad += other.data * self.data ** (other.data - 1) * result.grad
+            other.grad += result.data * math.log(self.data) * result.grad
+
+        result._backward = backward
+        return result
 
     def __add__(self, other: Scalar | float) -> Scalar:
         other = Scalar(other) if not isinstance(other, Scalar) else other
-        return Scalar(self.data + other.data, "+", (self, other))
+        result = Scalar(self.data + other.data, "+", (self, other))
+
+        def backward() -> None:
+            self.grad += result.grad
+            other.grad += result.grad
+
+        result._backward = backward
+        return result
 
     def __mul__(self, other: Scalar | float) -> Scalar:
         other = Scalar(other) if not isinstance(other, Scalar) else other
-        return Scalar(self.data * other.data, "×", (self, other))
+        result = Scalar(self.data * other.data, "×", (self, other))
+
+        def backward() -> None:
+            self.grad += other.data * result.grad
+            other.grad += self.data * result.grad
+
+        result._backward = backward
+        return result
 
     def __rpow__(self, other: Scalar | float) -> Scalar:
         other = Scalar(other) if not isinstance(other, Scalar) else other

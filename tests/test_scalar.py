@@ -1,3 +1,5 @@
+import math
+
 from micrograd.scalar import Scalar
 
 
@@ -181,3 +183,40 @@ def test__scalar__rtruediv_float() -> None:
     inv_scalar = next(dep for dep in result.deps if dep.data == 0.5)
     assert inv_scalar.op == "^"
     assert scalar in inv_scalar.deps
+
+
+def test__scalar__add_backward() -> None:
+    x = Scalar(2.0)
+    y = Scalar(3.0)
+    z = x + y
+    z.grad = 1.0
+    z._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+
+    # For z = x + y: ∂z/∂x = 1, ∂z/∂y = 1
+    assert x.grad == 1.0
+    assert y.grad == 1.0
+
+
+def test__scalar__mul_backward() -> None:
+    x = Scalar(2.0)
+    y = Scalar(3.0)
+    z = x * y
+    z.grad = 1.0
+    z._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+
+    # For z = x * y: ∂z/∂x = y = 3.0, ∂z/∂y = x = 2.0
+    assert x.grad == 3.0
+    assert y.grad == 2.0
+
+
+def test__scalar__pow_backward() -> None:
+    x = Scalar(2.0)
+    y = Scalar(3.0)
+    z = x**y
+    z.grad = 1.0
+    z._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+
+    # For z = x^y: ∂z/∂x = y * x^(y-1) = 3 * 2^2 = 12
+    # For z = x^y: ∂z/∂y = x^y * ln(x) = 8 * ln(2)
+    assert x.grad == 12.0
+    assert y.grad == 8.0 * math.log(2.0)
