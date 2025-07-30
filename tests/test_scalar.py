@@ -291,3 +291,21 @@ def test__scalar__backward_power_chain() -> None:
     assert x.grad == 192.0
     assert y.grad == 16.0 * 8.0 * math.log(2.0)
     assert z.grad == 64.0 * math.log(8.0)
+
+
+def test__scalar__zero_grad() -> None:
+    x = Scalar(2.0)
+    y = Scalar(3.0)
+    z = x * y + x
+
+    z.backward()
+
+    assert z.grad > 0.0
+    assert x.grad > 0.0
+    assert y.grad > 0.0
+
+    z.zero_grad()
+
+    assert x.grad == 0.0
+    assert y.grad == 0.0
+    assert z.grad == 0.0

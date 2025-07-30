@@ -91,3 +91,13 @@ class Scalar:
         ts: TopologicalSorter[Scalar] = TopologicalSorter(graph)
         for node in reversed(list(ts.static_order())):
             node._backward()  # noqa: SLF001
+
+    def zero_grad(self) -> None:
+        visited: set[Scalar] = set()
+        stack: list[Scalar] = [self]
+        while stack:
+            if (node := stack.pop()) in visited:
+                continue
+            visited.add(node)
+            node.grad = 0.0
+            stack.extend(node.deps)
