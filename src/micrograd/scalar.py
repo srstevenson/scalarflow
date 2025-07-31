@@ -18,7 +18,7 @@ class Scalar:
 
     @override
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(data={self.data})"
+        return f"{self.__class__.__name__}(data={self.data:.4f}, grad={self.grad:.4f})"
 
     def __pow__(self, other: Scalar | float) -> Scalar:
         other = Scalar(other) if not isinstance(other, Scalar) else other

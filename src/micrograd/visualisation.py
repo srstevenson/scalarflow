@@ -33,7 +33,7 @@ def visualise(root: Scalar) -> graphviz.Digraph:
         dot.node(  # pyright: ignore[reportUnknownMemberType]
             f"data_{id(node)}",
             shape="ellipse",
-            label=f"data={node.data}, grad={node.grad}",
+            label=f"data={node.data:.4f}, grad={node.grad:.4f}",
         )
         if node.op:
             dot.node(f"op_{id(node)}", shape="box", label=node.op)  # pyright: ignore[reportUnknownMemberType]

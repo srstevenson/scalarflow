@@ -12,7 +12,7 @@ def test__scalar__init() -> None:
 
 def test__scalar__repr() -> None:
     scalar = Scalar(3.0)
-    assert repr(scalar) == "Scalar(data=3.0)"
+    assert repr(scalar) == "Scalar(data=3.0000, grad=0.0000)"
 
 
 def test__scalar__pow_float() -> None:
