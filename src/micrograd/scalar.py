@@ -20,8 +20,12 @@ class Scalar:
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}(data={self.data:.4f}, grad={self.grad:.4f})"
 
+    @classmethod
+    def _coerce_other(cls, other: Scalar | float) -> Scalar:
+        return other if isinstance(other, Scalar) else cls(other)
+
     def __pow__(self, other: Scalar | float) -> Scalar:
-        other = Scalar(other) if not isinstance(other, Scalar) else other
+        other = self._coerce_other(other)
         result = Scalar(math.pow(self.data, other.data), "^", (self, other))
 
         def backward() -> None:
@@ -32,7 +36,7 @@ class Scalar:
         return result
 
     def __add__(self, other: Scalar | float) -> Scalar:
-        other = Scalar(other) if not isinstance(other, Scalar) else other
+        other = self._coerce_other(other)
         result = Scalar(self.data + other.data, "+", (self, other))
 
         def backward() -> None:
@@ -43,7 +47,7 @@ class Scalar:
         return result
 
     def __mul__(self, other: Scalar | float) -> Scalar:
-        other = Scalar(other) if not isinstance(other, Scalar) else other
+        other = self._coerce_other(other)
         result = Scalar(self.data * other.data, "×", (self, other))
 
         def backward() -> None:
@@ -54,7 +58,7 @@ class Scalar:
         return result
 
     def __rpow__(self, other: Scalar | float) -> Scalar:
-        other = Scalar(other) if not isinstance(other, Scalar) else other
+        other = self._coerce_other(other)
         return other**self
 
     def __radd__(self, other: float) -> Scalar:
