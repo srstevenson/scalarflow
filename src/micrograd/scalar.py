@@ -150,3 +150,12 @@ class Scalar:
 
         result._backward = backward
         return result
+
+    def sqrt(self) -> Scalar:
+        result = Scalar(math.sqrt(self.data), "sqrt", (self,))
+
+        def backward() -> None:
+            self.grad += (1 / (2 * result.data)) * result.grad
+
+        result._backward = backward
+        return result

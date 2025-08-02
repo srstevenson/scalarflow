@@ -473,3 +473,35 @@ def test__scalar__log_chain(input_data: float) -> None:
 
     expected_grad = 2.0 * (1 / input_data)
     assert x.grad == expected_grad
+
+
+@pytest.mark.parametrize("input_data", [0.25, 1.0, 4.0, 9.0, 16.0, 25.0])
+def test__scalar__sqrt_forward(input_data: float) -> None:
+    scalar = Scalar(input_data)
+    result = scalar.sqrt()
+
+    expected = math.sqrt(input_data)
+    assert result.data == expected
+    assert result.op == "sqrt"
+    assert result.deps == {scalar}
+
+
+@pytest.mark.parametrize("input_data", [0.25, 1.0, 4.0, 9.0, 16.0, 25.0])
+def test__scalar__sqrt_backward(input_data: float) -> None:
+    x = Scalar(input_data)
+    y = x.sqrt()
+    y.grad = 1.0
+    y._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+
+    expected_grad = 1 / (2 * math.sqrt(input_data))
+    assert x.grad == expected_grad
+
+
+@pytest.mark.parametrize("input_data", [0.25, 1.0, 4.0, 9.0, 16.0])
+def test__scalar__sqrt_chain(input_data: float) -> None:
+    x = Scalar(input_data)
+    y = x.sqrt() * 2.0
+    y.backward()
+
+    expected_grad = 2.0 * (1 / (2 * math.sqrt(input_data)))
+    assert x.grad == expected_grad
