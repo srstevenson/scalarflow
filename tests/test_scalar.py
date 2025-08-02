@@ -409,3 +409,35 @@ def test__scalar__sigmoid_chain(input_data: float) -> None:
 
     expected_grad = 2.0 * _grad_sigmoid(input_data)
     assert x.grad == expected_grad
+
+
+@pytest.mark.parametrize("input_data", [-2.0, -1.0, 0.0, 1.0, 2.0, 3.0])
+def test__scalar__exp_forward(input_data: float) -> None:
+    scalar = Scalar(input_data)
+    result = scalar.exp()
+
+    expected = math.exp(input_data)
+    assert result.data == expected
+    assert result.op == "exp"
+    assert result.deps == {scalar}
+
+
+@pytest.mark.parametrize("input_data", [-2.0, -1.0, 0.0, 1.0, 2.0, 3.0])
+def test__scalar__exp_backward(input_data: float) -> None:
+    x = Scalar(input_data)
+    y = x.exp()
+    y.grad = 1.0
+    y._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+
+    expected_grad = math.exp(input_data)
+    assert x.grad == expected_grad
+
+
+@pytest.mark.parametrize("input_data", [-2.0, -1.0, 0.0, 1.0, 2.0])
+def test__scalar__exp_chain(input_data: float) -> None:
+    x = Scalar(input_data)
+    y = x.exp() * 2.0
+    y.backward()
+
+    expected_grad = 2.0 * math.exp(input_data)
+    assert x.grad == expected_grad

@@ -132,3 +132,12 @@ class Scalar:
 
         result._backward = backward
         return result
+
+    def exp(self) -> Scalar:
+        result = Scalar(math.exp(self.data), "exp", (self,))
+
+        def backward() -> None:
+            self.grad += result.data * result.grad
+
+        result._backward = backward
+        return result
