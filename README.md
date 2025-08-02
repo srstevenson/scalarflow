@@ -1,4 +1,4 @@
-# micrograd
+# ScalarFlow
 
-The spelled-out intro to neural networks and backpropagation, following
-[Andrej Karpathy's video](https://www.youtube.com/watch?v=VMj-3S1tku0).
+A pedagogical automatic differentiation library with scalar primitives, inspired
+by [micrograd](https://github.com/karpathy/micrograd).

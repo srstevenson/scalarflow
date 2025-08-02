@@ -1,5 +1,5 @@
-from micrograd.scalar import Scalar
-from micrograd.visualisation import Graph, traverse, visualise
+from scalarflow.scalar import Scalar
+from scalarflow.visualisation import Graph, traverse, visualise
 
 
 def test__graph__init() -> None:

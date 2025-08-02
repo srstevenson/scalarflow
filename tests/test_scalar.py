@@ -1,7 +1,8 @@
 import math
 
 import pytest
-from micrograd.scalar import Scalar
+
+from scalarflow.scalar import Scalar
 
 
 def test__scalar__init() -> None:

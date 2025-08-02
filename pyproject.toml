@@ -1,14 +1,11 @@
 [project]
-name = "micrograd"
+name = "scalarflow"
 version = "0.1.0"
-description = "The spelled-out intro to neural networks and backpropagation"
+description = "A pedagogical automatic differentiation library with scalar primitives"
 readme = "README.md"
 authors = [{ name = "Scott Stevenson", email = "scott@stevenson.io" }]
 requires-python = ">=3.13"
 dependencies = ["graphviz>=0.21"]
-
-[project.scripts]
-micrograd = "micrograd:main"
 
 [dependency-groups]
 dev = [

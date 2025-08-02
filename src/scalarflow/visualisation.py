@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 
 import graphviz  # pyright: ignore[reportMissingTypeStubs]
-from micrograd.scalar import Scalar
+
+from scalarflow.scalar import Scalar
 
 
 @dataclass(frozen=True)
