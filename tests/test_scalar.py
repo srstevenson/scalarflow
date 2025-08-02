@@ -335,3 +335,41 @@ def test__scalar__relu_chain(input_data: float, expected_grad: float) -> None:
     y.backward()
 
     assert x.grad == expected_grad
+
+
+@pytest.mark.parametrize(
+    ("input_data", "expected"),
+    [(1.0, math.tanh(1.0)), (-1.0, math.tanh(-1.0)), (0.0, 0.0)],
+)
+def test__scalar__tanh_forward(input_data: float, expected: float) -> None:
+    scalar = Scalar(input_data)
+    result = scalar.tanh()
+
+    assert result.data == expected
+    assert result.op == "tanh"
+    assert result.deps == {scalar}
+
+
+@pytest.mark.parametrize(
+    ("input_data", "expected"),
+    [(1.0, 1 - math.tanh(1.0) ** 2), (-1.0, 1 - math.tanh(-1.0) ** 2), (0.0, 1.0)],
+)
+def test__scalar__tanh_backward(input_data: float, expected: float) -> None:
+    x = Scalar(input_data)
+    y = x.tanh()
+    y.grad = 1.0
+    y._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+
+    assert x.grad == expected
+
+
+@pytest.mark.parametrize(
+    ("input_data", "expected_grad"),
+    [(1.0, 2.0 * (1 - math.tanh(1.0) ** 2)), (-1.0, 2.0 * (1 - math.tanh(-1.0) ** 2))],
+)
+def test__scalar__tanh_chain(input_data: float, expected_grad: float) -> None:
+    x = Scalar(input_data)
+    y = x.tanh() * 2.0
+    y.backward()
+
+    assert x.grad == expected_grad

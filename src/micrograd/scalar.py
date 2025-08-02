@@ -114,3 +114,12 @@ class Scalar:
 
         result._backward = backward
         return result
+
+    def tanh(self) -> Scalar:
+        result = Scalar(math.tanh(self.data), "tanh", (self,))
+
+        def backward() -> None:
+            self.grad += (1 - result.data**2) * result.grad
+
+        result._backward = backward
+        return result
