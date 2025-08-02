@@ -1,5 +1,6 @@
 import math
 
+import pytest
 from micrograd.scalar import Scalar
 
 
@@ -309,3 +310,36 @@ def test__scalar__zero_grad() -> None:
     assert x.grad == 0.0
     assert y.grad == 0.0
     assert z.grad == 0.0
+
+
+@pytest.mark.parametrize(
+    ("input_data", "expected"), [(3.0, 3.0), (-2.0, 0.0), (0.0, 0.0)]
+)
+def test__scalar__relu_forward(input_data: float, expected: float) -> None:
+    scalar = Scalar(input_data)
+    result = scalar.relu()
+
+    assert result.data == expected
+    assert result.op == "relu"
+    assert result.deps == {scalar}
+
+
+@pytest.mark.parametrize(
+    ("input_data", "expected"), [(3.0, 1.0), (-2.0, 0.0), (0.0, 0.0)]
+)
+def test__scalar__relu_backward(input_data: float, expected: float) -> None:
+    x = Scalar(input_data)
+    y = x.relu()
+    y.grad = 1.0
+    y._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+
+    assert x.grad == expected
+
+
+@pytest.mark.parametrize(("input_data", "expected_grad"), [(-1.0, 0.0), (1.0, 2.0)])
+def test__scalar__relu_chain(input_data: float, expected_grad: float) -> None:
+    x = Scalar(input_data)
+    y = x.relu() * 2.0
+    y.backward()
+
+    assert x.grad == expected_grad

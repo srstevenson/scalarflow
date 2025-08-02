@@ -105,3 +105,12 @@ class Scalar:
             visited.add(node)
             node.grad = 0.0
             stack.extend(node.deps)
+
+    def relu(self) -> Scalar:
+        result = Scalar(max(0, self.data), "relu", (self,))
+
+        def backward() -> None:
+            self.grad += (self.data > 0) * result.grad
+
+        result._backward = backward
+        return result
