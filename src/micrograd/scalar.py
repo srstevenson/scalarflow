@@ -209,3 +209,21 @@ class Scalar:
 
         result._backward = backward
         return result
+
+    def sin(self) -> Scalar:
+        result = Scalar(math.sin(self.data), "sin", (self,))
+
+        def backward() -> None:
+            self.grad += math.cos(self.data) * result.grad
+
+        result._backward = backward
+        return result
+
+    def cos(self) -> Scalar:
+        result = Scalar(math.cos(self.data), "cos", (self,))
+
+        def backward() -> None:
+            self.grad += -math.sin(self.data) * result.grad
+
+        result._backward = backward
+        return result

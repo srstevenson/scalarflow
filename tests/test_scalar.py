@@ -707,3 +707,63 @@ def test__scalar__max_chain() -> None:
     # x is larger, so gradient flows to x and is multiplied by 2.
     assert x.grad == 2.0
     assert y.grad == 0.0
+
+
+@pytest.mark.parametrize("input_data", [0.0, math.pi / 4, math.pi / 2, math.pi])
+def test__scalar__sin_forward(input_data: float) -> None:
+    scalar = Scalar(input_data)
+    result = scalar.sin()
+
+    expected = math.sin(input_data)
+    assert result.data == expected
+    assert result.op == "sin"
+    assert result.deps == {scalar}
+
+
+@pytest.mark.parametrize("input_data", [0.0, math.pi / 4, math.pi / 2, math.pi])
+def test__scalar__sin_backward(input_data: float) -> None:
+    x = Scalar(input_data)
+    y = x.sin()
+    y.grad = 1.0
+    y._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+
+    expected_grad = math.cos(input_data)
+    assert x.grad == expected_grad
+
+
+@pytest.mark.parametrize("input_data", [0.0, math.pi / 4, math.pi / 2])
+def test__scalar__sin_chain(input_data: float) -> None:
+    x = Scalar(input_data)
+    y = x.sin() * 2.0
+    y.backward()
+
+    assert x.grad == 2.0 * math.cos(input_data)
+
+
+@pytest.mark.parametrize("input_data", [0.0, math.pi / 4, math.pi / 2, math.pi])
+def test__scalar__cos_forward(input_data: float) -> None:
+    scalar = Scalar(input_data)
+    result = scalar.cos()
+
+    assert result.data == math.cos(input_data)
+    assert result.op == "cos"
+    assert result.deps == {scalar}
+
+
+@pytest.mark.parametrize("input_data", [0.0, math.pi / 4, math.pi / 2, math.pi])
+def test__scalar__cos_backward(input_data: float) -> None:
+    x = Scalar(input_data)
+    y = x.cos()
+    y.grad = 1.0
+    y._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+
+    assert x.grad == -math.sin(input_data)
+
+
+@pytest.mark.parametrize("input_data", [0.0, math.pi / 4, math.pi / 2])
+def test__scalar__cos_chain(input_data: float) -> None:
+    x = Scalar(input_data)
+    y = x.cos() * 2.0
+    y.backward()
+
+    assert x.grad == 2.0 * -math.sin(input_data)
