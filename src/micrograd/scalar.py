@@ -175,3 +175,37 @@ class Scalar:
 
         result._backward = backward
         return result
+
+    def min(self, other: Scalar | float) -> Scalar:
+        other = self._coerce_other(other)
+        result = Scalar(min(self.data, other.data), "min", (self, other))
+
+        def backward() -> None:
+            if self.data < other.data:
+                self.grad += result.grad
+            elif self.data > other.data:
+                other.grad += result.grad
+            else:
+                # Split gradient equally when values are tied.
+                self.grad += 0.5 * result.grad
+                other.grad += 0.5 * result.grad
+
+        result._backward = backward
+        return result
+
+    def max(self, other: Scalar | float) -> Scalar:
+        other = self._coerce_other(other)
+        result = Scalar(max(self.data, other.data), "max", (self, other))
+
+        def backward() -> None:
+            if self.data > other.data:
+                self.grad += result.grad
+            elif self.data < other.data:
+                other.grad += result.grad
+            else:
+                # Split gradient equally when values are tied.
+                self.grad += 0.5 * result.grad
+                other.grad += 0.5 * result.grad
+
+        result._backward = backward
+        return result

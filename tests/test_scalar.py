@@ -547,3 +547,163 @@ def test__scalar__abs_chain(input_data: float) -> None:
     else:
         expected_grad = 0.0
     assert x.grad == expected_grad
+
+
+@pytest.mark.parametrize("other", [Scalar(3.0), 3.0])
+def test__scalar__min_forward_self_smaller(other: Scalar | float) -> None:
+    scalar = Scalar(2.0)
+    result = scalar.min(other)
+
+    assert result.data == 2.0
+    assert result.op == "min"
+    assert len(result.deps) == 2
+    assert scalar in result.deps
+
+
+@pytest.mark.parametrize("other", [Scalar(1.0), 1.0])
+def test__scalar__min_forward_other_smaller(other: Scalar | float) -> None:
+    scalar = Scalar(2.0)
+    result = scalar.min(other)
+
+    assert result.data == 1.0
+    assert result.op == "min"
+    assert len(result.deps) == 2
+    assert scalar in result.deps
+
+
+@pytest.mark.parametrize("other", [Scalar(2.0), 2.0])
+def test__scalar__min_forward_equal(other: Scalar | float) -> None:
+    scalar = Scalar(2.0)
+    result = scalar.min(other)
+
+    assert result.data == 2.0
+    assert result.op == "min"
+    assert len(result.deps) == 2
+    assert scalar in result.deps
+
+
+def test__scalar__min_backward_self_smaller() -> None:
+    x = Scalar(1.0)
+    y = Scalar(2.0)
+    z = x.min(y)
+    z.grad = 1.0
+    z._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+
+    # x is smaller, so gradient flows to x
+    assert x.grad == 1.0
+    assert y.grad == 0.0
+
+
+def test__scalar__min_backward_other_smaller() -> None:
+    x = Scalar(2.0)
+    y = Scalar(1.0)
+    z = x.min(y)
+    z.grad = 1.0
+    z._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+
+    # y is smaller, so gradient flows to y
+    assert x.grad == 0.0
+    assert y.grad == 1.0
+
+
+def test__scalar__min_backward_equal() -> None:
+    x = Scalar(2.0)
+    y = Scalar(2.0)
+    z = x.min(y)
+    z.grad = 1.0
+    z._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+
+    # Equal values, so gradient is split equally
+    assert x.grad == 0.5
+    assert y.grad == 0.5
+
+
+def test__scalar__min_chain() -> None:
+    x = Scalar(1.0)
+    y = Scalar(3.0)
+    z = x.min(y) * 2.0
+    z.backward()
+
+    # x is smaller, so gradient flows to x and is multiplied by 2
+    assert x.grad == 2.0
+    assert y.grad == 0.0
+
+
+@pytest.mark.parametrize("other", [Scalar(1.0), 1.0])
+def test__scalar__max_forward_self_larger(other: Scalar | float) -> None:
+    scalar = Scalar(2.0)
+    result = scalar.max(other)
+
+    assert result.data == 2.0
+    assert result.op == "max"
+    assert len(result.deps) == 2
+    assert scalar in result.deps
+
+
+@pytest.mark.parametrize("other", [Scalar(3.0), 3.0])
+def test__scalar__max_forward_other_larger(other: Scalar | float) -> None:
+    scalar = Scalar(2.0)
+    result = scalar.max(other)
+
+    assert result.data == 3.0
+    assert result.op == "max"
+    assert len(result.deps) == 2
+    assert scalar in result.deps
+
+
+@pytest.mark.parametrize("other", [Scalar(2.0), 2.0])
+def test__scalar__max_forward_equal(other: Scalar | float) -> None:
+    scalar = Scalar(2.0)
+    result = scalar.max(other)
+
+    assert result.data == 2.0
+    assert result.op == "max"
+    assert len(result.deps) == 2
+    assert scalar in result.deps
+
+
+def test__scalar__max_backward_self_larger() -> None:
+    x = Scalar(3.0)
+    y = Scalar(1.0)
+    z = x.max(y)
+    z.grad = 1.0
+    z._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+
+    # x is larger, so gradient flows to x.
+    assert x.grad == 1.0
+    assert y.grad == 0.0
+
+
+def test__scalar__max_backward_other_larger() -> None:
+    x = Scalar(1.0)
+    y = Scalar(3.0)
+    z = x.max(y)
+    z.grad = 1.0
+    z._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+
+    # y is larger, so gradient flows to y.
+    assert x.grad == 0.0
+    assert y.grad == 1.0
+
+
+def test__scalar__max_backward_equal() -> None:
+    x = Scalar(2.0)
+    y = Scalar(2.0)
+    z = x.max(y)
+    z.grad = 1.0
+    z._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+
+    # Equal values, so gradient is split equally.
+    assert x.grad == 0.5
+    assert y.grad == 0.5
+
+
+def test__scalar__max_chain() -> None:
+    x = Scalar(3.0)
+    y = Scalar(1.0)
+    z = x.max(y) * 2.0
+    z.backward()
+
+    # x is larger, so gradient flows to x and is multiplied by 2.
+    assert x.grad == 2.0
+    assert y.grad == 0.0
