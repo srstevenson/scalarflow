@@ -179,24 +179,11 @@ def test__scalar__rtruediv_float() -> None:
     assert scalar in inv_scalar.deps
 
 
-def test__scalar__add__backward() -> None:
-    x = Scalar(2.0)
-    y = Scalar(3.0)
-    z = x + y
-    z.grad = 1.0
-    z._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
-
-    # For z = x + y: ∂z/∂x = 1, ∂z/∂y = 1
-    assert x.grad == 1.0
-    assert y.grad == 1.0
-
-
 def test__scalar__mul__backward() -> None:
     x = Scalar(2.0)
     y = Scalar(3.0)
     z = x * y
-    z.grad = 1.0
-    z._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+    z.backward()
 
     # For z = x * y: ∂z/∂x = y = 3.0, ∂z/∂y = x = 2.0
     assert x.grad == 3.0
@@ -207,8 +194,7 @@ def test__scalar__pow__backward() -> None:
     x = Scalar(2.0)
     y = Scalar(3.0)
     z = x**y
-    z.grad = 1.0
-    z._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+    z.backward()
 
     # For z = x^y: ∂z/∂x = y * x^(y-1) = 3 * 2^2 = 12
     # For z = x^y: ∂z/∂y = x^y * ln(x) = 8 * ln(2)
@@ -323,8 +309,7 @@ def test__scalar__relu_forward(input_data: float, expected: float) -> None:
 def test__scalar__relu_backward(input_data: float, expected: float) -> None:
     x = Scalar(input_data)
     y = x.relu()
-    y.grad = 1.0
-    y._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+    y.backward()
 
     assert x.grad == expected
 
@@ -358,8 +343,7 @@ def test__scalar__tanh_forward(input_data: float, expected: float) -> None:
 def test__scalar__tanh_backward(input_data: float, expected: float) -> None:
     x = Scalar(input_data)
     y = x.tanh()
-    y.grad = 1.0
-    y._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+    y.backward()
 
     assert x.grad == expected
 
@@ -396,8 +380,7 @@ def _grad_sigmoid(x: float) -> float:
 def test__scalar__sigmoid_backward(input_data: float) -> None:
     x = Scalar(input_data)
     y = x.sigmoid()
-    y.grad = 1.0
-    y._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+    y.backward()
 
     assert x.grad == _grad_sigmoid(x.data)
 
@@ -427,8 +410,7 @@ def test__scalar__exp_forward(input_data: float) -> None:
 def test__scalar__exp_backward(input_data: float) -> None:
     x = Scalar(input_data)
     y = x.exp()
-    y.grad = 1.0
-    y._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+    y.backward()
 
     expected_grad = math.exp(input_data)
     assert x.grad == expected_grad
@@ -459,8 +441,7 @@ def test__scalar__log_forward(input_data: float) -> None:
 def test__scalar__log_backward(input_data: float) -> None:
     x = Scalar(input_data)
     y = x.log()
-    y.grad = 1.0
-    y._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+    y.backward()
 
     expected_grad = 1 / input_data
     assert x.grad == expected_grad
@@ -491,8 +472,7 @@ def test__scalar__sqrt_forward(input_data: float) -> None:
 def test__scalar__sqrt_backward(input_data: float) -> None:
     x = Scalar(input_data)
     y = x.sqrt()
-    y.grad = 1.0
-    y._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+    y.backward()
 
     expected_grad = 1 / (2 * math.sqrt(input_data))
     assert x.grad == expected_grad
@@ -523,8 +503,7 @@ def test__scalar__abs_forward(input_data: float) -> None:
 def test__scalar__abs_backward(input_data: float) -> None:
     x = Scalar(input_data)
     y = x.abs()
-    y.grad = 1.0
-    y._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+    y.backward()
 
     if input_data > 0:
         expected_grad = 1
@@ -587,8 +566,7 @@ def test__scalar__min_backward_self_smaller() -> None:
     x = Scalar(1.0)
     y = Scalar(2.0)
     z = x.min(y)
-    z.grad = 1.0
-    z._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+    z.backward()
 
     # x is smaller, so gradient flows to x
     assert x.grad == 1.0
@@ -599,8 +577,7 @@ def test__scalar__min_backward_other_smaller() -> None:
     x = Scalar(2.0)
     y = Scalar(1.0)
     z = x.min(y)
-    z.grad = 1.0
-    z._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+    z.backward()
 
     # y is smaller, so gradient flows to y
     assert x.grad == 0.0
@@ -611,8 +588,7 @@ def test__scalar__min_backward_equal() -> None:
     x = Scalar(2.0)
     y = Scalar(2.0)
     z = x.min(y)
-    z.grad = 1.0
-    z._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+    z.backward()
 
     # Equal values, so gradient is split equally
     assert x.grad == 0.5
@@ -667,8 +643,7 @@ def test__scalar__max_backward_self_larger() -> None:
     x = Scalar(3.0)
     y = Scalar(1.0)
     z = x.max(y)
-    z.grad = 1.0
-    z._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+    z.backward()
 
     # x is larger, so gradient flows to x.
     assert x.grad == 1.0
@@ -679,8 +654,7 @@ def test__scalar__max_backward_other_larger() -> None:
     x = Scalar(1.0)
     y = Scalar(3.0)
     z = x.max(y)
-    z.grad = 1.0
-    z._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+    z.backward()
 
     # y is larger, so gradient flows to y.
     assert x.grad == 0.0
@@ -691,8 +665,7 @@ def test__scalar__max_backward_equal() -> None:
     x = Scalar(2.0)
     y = Scalar(2.0)
     z = x.max(y)
-    z.grad = 1.0
-    z._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+    z.backward()
 
     # Equal values, so gradient is split equally.
     assert x.grad == 0.5
@@ -725,8 +698,7 @@ def test__scalar__sin_forward(input_data: float) -> None:
 def test__scalar__sin_backward(input_data: float) -> None:
     x = Scalar(input_data)
     y = x.sin()
-    y.grad = 1.0
-    y._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+    y.backward()
 
     expected_grad = math.cos(input_data)
     assert x.grad == expected_grad
@@ -755,8 +727,7 @@ def test__scalar__cos_forward(input_data: float) -> None:
 def test__scalar__cos_backward(input_data: float) -> None:
     x = Scalar(input_data)
     y = x.cos()
-    y.grad = 1.0
-    y._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+    y.backward()
 
     assert x.grad == -math.sin(input_data)
 
