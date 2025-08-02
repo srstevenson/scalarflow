@@ -227,3 +227,17 @@ class Scalar:
 
         result._backward = backward
         return result
+
+    def clamp(
+        self, min_val: float | None = None, max_val: float | None = None
+    ) -> Scalar:
+        if min_val is not None and max_val is not None and min_val > max_val:
+            msg = f"min_val ({min_val}) must be <= max_val ({max_val})"
+            raise ValueError(msg)
+
+        result = self
+        if min_val is not None:
+            result = result.max(min_val)
+        if max_val is not None:
+            result = result.min(max_val)
+        return result

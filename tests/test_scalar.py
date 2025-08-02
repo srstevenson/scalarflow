@@ -767,3 +767,54 @@ def test__scalar__cos_chain(input_data: float) -> None:
     y.backward()
 
     assert x.grad == 2.0 * -math.sin(input_data)
+
+
+@pytest.mark.parametrize("input_data", [-1.0, 0.5, 2.0])
+def test__scalar__clamp_both_bounds(input_data: float) -> None:
+    scalar = Scalar(input_data)
+    result = scalar.clamp(0.0, 1.0)
+
+    expected = max(0.0, min(1.0, input_data))
+    assert result.data == expected
+
+
+def test__scalar__clamp_single_bounds() -> None:
+    # Min only.
+    x = Scalar(-1.0)
+    result = x.clamp(min_val=0.0)
+    assert result.data == 0.0
+
+    # Max only.
+    x = Scalar(2.0)
+    result = x.clamp(max_val=1.0)
+    assert result.data == 1.0
+
+    # No bounds.
+    x = Scalar(0.5)
+    result = x.clamp()
+    assert result.data == 0.5
+    assert result is x
+
+
+def test__scalar__clamp_backward() -> None:
+    x = Scalar(0.5)
+    y = x.clamp(0.0, 1.0)
+    y.backward()
+
+    # Value within bounds, gradient should flow through
+    assert x.grad == 1.0
+
+
+def test__scalar__clamp_chain() -> None:
+    x = Scalar(0.5)
+    y = x.clamp(0.0, 1.0) * 2.0
+    y.backward()
+
+    assert x.grad == 2.0
+
+
+def test__scalar__clamp_invalid_bounds() -> None:
+    x = Scalar(0.5)
+
+    with pytest.raises(ValueError, match=r"min_val \(1.0\) must be <= max_val \(0.0\)"):
+        x.clamp(1.0, 0.0)
