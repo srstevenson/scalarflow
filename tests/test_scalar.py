@@ -16,54 +16,33 @@ def test__scalar__repr() -> None:
     assert repr(scalar) == "Scalar(data=3.0000, grad=0.0000)"
 
 
-def test__scalar__pow_float() -> None:
+@pytest.mark.parametrize("other", [Scalar(3.0), 3.0])
+def test__scalar__pow(other: Scalar | float) -> None:
     scalar = Scalar(2.0)
-    result = scalar**3.0
+    result = scalar**other
+
     assert result.data == 8.0
     assert result.op == "^"
     assert len(result.deps) == 2
     assert scalar in result.deps
 
 
-def test__scalar__pow_scalar() -> None:
-    scalar1 = Scalar(2.0)
-    scalar2 = Scalar(3.0)
-    result = scalar1**scalar2
-    assert result.data == 8.0
-    assert result.op == "^"
-    assert result.deps == {scalar1, scalar2}
-
-
-def test__scalar__add_scalar() -> None:
-    scalar1 = Scalar(1.0)
-    scalar2 = Scalar(2.0)
-    result = scalar1 + scalar2
-    assert result.data == 3.0
-    assert result.op == "+"
-    assert result.deps == {scalar1, scalar2}
-
-
-def test__scalar__add_float() -> None:
+@pytest.mark.parametrize("other", [Scalar(2.0), 2.0])
+def test__scalar__add(other: Scalar | float) -> None:
     scalar = Scalar(1.0)
-    result = scalar + 2.0
+    result = scalar + other
+
     assert result.data == 3.0
     assert result.op == "+"
     assert len(result.deps) == 2
     assert scalar in result.deps
 
 
-def test__scalar__mul_scalar() -> None:
-    scalar1 = Scalar(2.0)
-    scalar2 = Scalar(3.0)
-    result = scalar1 * scalar2
-    assert result.data == 6.0
-    assert result.op == "×"
-    assert result.deps == {scalar1, scalar2}
-
-
-def test__scalar__mul_float() -> None:
+@pytest.mark.parametrize("other", [Scalar(3.0), 3.0])
+def test__scalar__mul(other: Scalar | float) -> None:
     scalar = Scalar(2.0)
-    result = scalar * 3.0
+    result = scalar * other
+
     assert result.data == 6.0
     assert result.op == "×"
     assert len(result.deps) == 2
