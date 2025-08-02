@@ -14,7 +14,7 @@ class Scalar:
         self.grad: float = 0.0
         self.op: str = op
         self.deps: frozenset[Scalar] = frozenset(deps)
-        self._backward: Callable[[], None] = lambda: None
+        self.backward_step: Callable[[], None] = lambda: None
 
     @override
     def __repr__(self) -> str:
@@ -32,7 +32,7 @@ class Scalar:
             self.grad += other.data * self.data ** (other.data - 1) * result.grad
             other.grad += result.data * math.log(self.data) * result.grad
 
-        result._backward = backward
+        result.backward_step = backward
         return result
 
     def __add__(self, other: Scalar | float) -> Scalar:
@@ -43,7 +43,7 @@ class Scalar:
             self.grad += result.grad
             other.grad += result.grad
 
-        result._backward = backward
+        result.backward_step = backward
         return result
 
     def __mul__(self, other: Scalar | float) -> Scalar:
@@ -54,7 +54,7 @@ class Scalar:
             self.grad += other.data * result.grad
             other.grad += self.data * result.grad
 
-        result._backward = backward
+        result.backward_step = backward
         return result
 
     def __rpow__(self, other: Scalar | float) -> Scalar:
@@ -94,7 +94,7 @@ class Scalar:
 
         ts: TopologicalSorter[Scalar] = TopologicalSorter(graph)
         for node in reversed(list(ts.static_order())):
-            node._backward()  # noqa: SLF001
+            node.backward_step()
 
     def zero_grad(self) -> None:
         visited: set[Scalar] = set()
@@ -112,7 +112,7 @@ class Scalar:
         def backward() -> None:
             self.grad += (self.data > 0) * result.grad
 
-        result._backward = backward
+        result.backward_step = backward
         return result
 
     def tanh(self) -> Scalar:
@@ -121,7 +121,7 @@ class Scalar:
         def backward() -> None:
             self.grad += (1 - result.data**2) * result.grad
 
-        result._backward = backward
+        result.backward_step = backward
         return result
 
     def sigmoid(self) -> Scalar:
@@ -130,7 +130,7 @@ class Scalar:
         def backward() -> None:
             self.grad += result.data * (1 - result.data) * result.grad
 
-        result._backward = backward
+        result.backward_step = backward
         return result
 
     def exp(self) -> Scalar:
@@ -139,7 +139,7 @@ class Scalar:
         def backward() -> None:
             self.grad += result.data * result.grad
 
-        result._backward = backward
+        result.backward_step = backward
         return result
 
     def log(self) -> Scalar:
@@ -148,7 +148,7 @@ class Scalar:
         def backward() -> None:
             self.grad += (1 / self.data) * result.grad
 
-        result._backward = backward
+        result.backward_step = backward
         return result
 
     def sqrt(self) -> Scalar:
@@ -157,7 +157,7 @@ class Scalar:
         def backward() -> None:
             self.grad += (1 / (2 * result.data)) * result.grad
 
-        result._backward = backward
+        result.backward_step = backward
         return result
 
     def abs(self) -> Scalar:
@@ -173,7 +173,7 @@ class Scalar:
                 # PyTorch in using 0, whereas JAX uses 1.
                 self.grad += 0 * result.grad
 
-        result._backward = backward
+        result.backward_step = backward
         return result
 
     def min(self, other: Scalar | float) -> Scalar:
@@ -190,7 +190,7 @@ class Scalar:
                 self.grad += 0.5 * result.grad
                 other.grad += 0.5 * result.grad
 
-        result._backward = backward
+        result.backward_step = backward
         return result
 
     def max(self, other: Scalar | float) -> Scalar:
@@ -207,7 +207,7 @@ class Scalar:
                 self.grad += 0.5 * result.grad
                 other.grad += 0.5 * result.grad
 
-        result._backward = backward
+        result.backward_step = backward
         return result
 
     def sin(self) -> Scalar:
@@ -216,7 +216,7 @@ class Scalar:
         def backward() -> None:
             self.grad += math.cos(self.data) * result.grad
 
-        result._backward = backward
+        result.backward_step = backward
         return result
 
     def cos(self) -> Scalar:
@@ -225,7 +225,7 @@ class Scalar:
         def backward() -> None:
             self.grad += -math.sin(self.data) * result.grad
 
-        result._backward = backward
+        result.backward_step = backward
         return result
 
     def clamp(
