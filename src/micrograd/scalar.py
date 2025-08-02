@@ -159,3 +159,19 @@ class Scalar:
 
         result._backward = backward
         return result
+
+    def abs(self) -> Scalar:
+        result = Scalar(abs(self.data), "abs", (self,))
+
+        def backward() -> None:
+            if self.data > 0:
+                self.grad += 1 * result.grad
+            elif self.data < 0:
+                self.grad += -1 * result.grad
+            else:
+                # Any value in [-1, 1] is valid for the gradient at 0. We follow
+                # PyTorch in using 0, whereas JAX uses 1.
+                self.grad += 0 * result.grad
+
+        result._backward = backward
+        return result

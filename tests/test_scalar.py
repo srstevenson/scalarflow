@@ -505,3 +505,45 @@ def test__scalar__sqrt_chain(input_data: float) -> None:
 
     expected_grad = 2.0 * (1 / (2 * math.sqrt(input_data)))
     assert x.grad == expected_grad
+
+
+@pytest.mark.parametrize("input_data", [-2.0, 0.0, 2.0])
+def test__scalar__abs_forward(input_data: float) -> None:
+    scalar = Scalar(input_data)
+    result = scalar.abs()
+
+    expected = abs(input_data)
+    assert result.data == expected
+    assert result.op == "abs"
+    assert result.deps == {scalar}
+
+
+@pytest.mark.parametrize("input_data", [-2.0, 0.0, 2.0])
+def test__scalar__abs_backward(input_data: float) -> None:
+    x = Scalar(input_data)
+    y = x.abs()
+    y.grad = 1.0
+    y._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+
+    if input_data > 0:
+        expected_grad = 1
+    elif input_data < 0:
+        expected_grad = -1
+    else:  # input_data == 0, following PyTorch convention
+        expected_grad = 0
+    assert x.grad == expected_grad
+
+
+@pytest.mark.parametrize("input_data", [-2.0, 0.0, 2.0])
+def test__scalar__abs_chain(input_data: float) -> None:
+    x = Scalar(input_data)
+    y = x.abs() * 2.0
+    y.backward()
+
+    if input_data > 0:
+        expected_grad = 2.0
+    elif input_data < 0:
+        expected_grad = -2.0
+    else:
+        expected_grad = 0.0
+    assert x.grad == expected_grad
