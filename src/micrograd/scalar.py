@@ -123,3 +123,12 @@ class Scalar:
 
         result._backward = backward
         return result
+
+    def sigmoid(self) -> Scalar:
+        result = Scalar(1 / (1 + math.exp(-self.data)), "sigmoid", (self,))
+
+        def backward() -> None:
+            self.grad += result.data * (1 - result.data) * result.grad
+
+        result._backward = backward
+        return result
