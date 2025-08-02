@@ -2,7 +2,7 @@ import math
 
 import pytest
 
-from scalarflow.scalar import Scalar
+from scalarflow import Scalar
 
 
 def test__scalar__init() -> None:

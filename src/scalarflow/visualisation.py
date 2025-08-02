@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 import graphviz  # pyright: ignore[reportMissingTypeStubs]
 
-from scalarflow.scalar import Scalar
+from scalarflow import Scalar
 
 
 @dataclass(frozen=True)

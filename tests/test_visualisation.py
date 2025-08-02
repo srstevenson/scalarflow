@@ -1,4 +1,4 @@
-from scalarflow.scalar import Scalar
+from scalarflow import Scalar
 from scalarflow.visualisation import Graph, traverse, visualise
 
 
