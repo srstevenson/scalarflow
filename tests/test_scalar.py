@@ -6,6 +6,7 @@ from micrograd.scalar import Scalar
 
 def test__scalar__init() -> None:
     scalar = Scalar(3.0)
+
     assert scalar.data == 3.0
     assert not scalar.op
     assert not scalar.deps
@@ -13,6 +14,7 @@ def test__scalar__init() -> None:
 
 def test__scalar__repr() -> None:
     scalar = Scalar(3.0)
+
     assert repr(scalar) == "Scalar(data=3.0000, grad=0.0000)"
 
 
@@ -52,6 +54,7 @@ def test__scalar__mul(other: Scalar | float) -> None:
 def test__scalar__rpow_float() -> None:
     scalar = Scalar(3.0)
     result = 2.0**scalar
+
     assert result.data == 8.0
     assert result.op == "^"
     assert len(result.deps) == 2
@@ -62,6 +65,7 @@ def test__scalar__rpow_scalar() -> None:
     scalar1 = Scalar(2.0)
     scalar2 = Scalar(3.0)
     result = scalar1**scalar2
+
     assert result.data == 8.0
     assert result.op == "^"
     assert result.deps == {scalar1, scalar2}
@@ -70,6 +74,7 @@ def test__scalar__rpow_scalar() -> None:
 def test__scalar__radd_float() -> None:
     scalar = Scalar(1.0)
     result = 2.0 + scalar
+
     assert result.data == 3.0
     assert result.op == "+"
     assert len(result.deps) == 2
@@ -79,6 +84,7 @@ def test__scalar__radd_float() -> None:
 def test__scalar__rmul_float() -> None:
     scalar = Scalar(3.0)
     result = 2.0 * scalar
+
     assert result.data == 6.0
     assert result.op == "×"
     assert len(result.deps) == 2
@@ -88,6 +94,7 @@ def test__scalar__rmul_float() -> None:
 def test__scalar__neg() -> None:
     scalar = Scalar(2.0)
     result = -scalar
+
     assert result.data == -2.0
     assert result.op == "×"
     assert len(result.deps) == 2
@@ -98,6 +105,7 @@ def test__scalar__sub_scalar() -> None:
     scalar1 = Scalar(1.0)
     scalar2 = Scalar(2.0)
     result = scalar1 - scalar2
+
     assert result.data == -1.0
     assert result.op == "+"
     assert len(result.deps) == 2
@@ -112,6 +120,7 @@ def test__scalar__sub_scalar() -> None:
 def test__scalar__sub_float() -> None:
     scalar = Scalar(1.0)
     result = scalar - 2.0
+
     assert result.data == -1.0
     assert result.op == "+"
     assert len(result.deps) == 2
@@ -121,6 +130,7 @@ def test__scalar__sub_float() -> None:
 def test__scalar__rsub_float() -> None:
     scalar = Scalar(1.0)
     result = 2.0 - scalar
+
     assert result.data == 1.0
     assert result.op == "+"
     assert len(result.deps) == 2
@@ -133,6 +143,7 @@ def test__scalar__truediv_scalar() -> None:
     scalar1 = Scalar(3.0)
     scalar2 = Scalar(2.0)
     result = scalar1 / scalar2
+
     assert result.data == 1.5
     assert result.op == "×"
     assert len(result.deps) == 2
@@ -147,6 +158,7 @@ def test__scalar__truediv_scalar() -> None:
 def test__scalar__truediv_float() -> None:
     scalar = Scalar(3.0)
     result = scalar / 2.0
+
     assert result.data == 1.5
     assert result.op == "×"
     assert len(result.deps) == 2
@@ -156,6 +168,7 @@ def test__scalar__truediv_float() -> None:
 def test__scalar__rtruediv_float() -> None:
     scalar = Scalar(2.0)
     result = 3.0 / scalar
+
     assert result.data == 1.5
     assert result.op == "×"
     assert len(result.deps) == 2
