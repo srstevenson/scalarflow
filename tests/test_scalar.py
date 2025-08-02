@@ -441,3 +441,35 @@ def test__scalar__exp_chain(input_data: float) -> None:
 
     expected_grad = 2.0 * math.exp(input_data)
     assert x.grad == expected_grad
+
+
+@pytest.mark.parametrize("input_data", [0.1, 0.5, 1.0, 2.0, 3.0, math.e])
+def test__scalar__log_forward(input_data: float) -> None:
+    scalar = Scalar(input_data)
+    result = scalar.log()
+
+    expected = math.log(input_data)
+    assert result.data == expected
+    assert result.op == "log"
+    assert result.deps == {scalar}
+
+
+@pytest.mark.parametrize("input_data", [0.1, 0.5, 1.0, 2.0, 3.0, math.e])
+def test__scalar__log_backward(input_data: float) -> None:
+    x = Scalar(input_data)
+    y = x.log()
+    y.grad = 1.0
+    y._backward()  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+
+    expected_grad = 1 / input_data
+    assert x.grad == expected_grad
+
+
+@pytest.mark.parametrize("input_data", [0.1, 0.5, 1.0, 2.0, 3.0])
+def test__scalar__log_chain(input_data: float) -> None:
+    x = Scalar(input_data)
+    y = x.log() * 2.0
+    y.backward()
+
+    expected_grad = 2.0 * (1 / input_data)
+    assert x.grad == expected_grad

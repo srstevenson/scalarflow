@@ -141,3 +141,12 @@ class Scalar:
 
         result._backward = backward
         return result
+
+    def log(self) -> Scalar:
+        result = Scalar(math.log(self.data), "log", (self,))
+
+        def backward() -> None:
+            self.grad += (1 / self.data) * result.grad
+
+        result._backward = backward
+        return result
