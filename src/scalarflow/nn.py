@@ -27,6 +27,28 @@ def he_uniform(fan_in: int) -> float:
     return random.uniform(-bound, bound)
 
 
+def glorot_uniform(fan_in: int, fan_out: int) -> float:
+    """Glorot (Xavier) uniform initialization.
+
+    Samples from uniform distribution U(-bound, bound) where
+    bound = sqrt(6 / (fan_in + fan_out)). Designed for tanh/sigmoid activations.
+
+    Reference:
+        Understanding the difficulty of training deep feedforward neural
+        networks (Glorot & Bengio, 2010)
+        http://proceedings.mlr.press/v9/glorot10a.html
+
+    Args:
+        fan_in: Number of input units.
+        fan_out: Number of output units.
+
+    Returns:
+        Random weight value following Glorot uniform distribution.
+    """
+    bound = math.sqrt(6.0 / (fan_in + fan_out))
+    return random.uniform(-bound, bound)
+
+
 class Module(ABC):
     @abstractmethod
     def __call__(self, *args: Any, **kwargs: Any) -> Any: ...  # pyright: ignore[reportExplicitAny, reportAny]  # noqa: ANN401
