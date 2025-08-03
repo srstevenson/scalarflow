@@ -2,3 +2,4 @@ __pycache__/
 .coverage
 *.pdf
 *.png
+!assets/scalarflow.png

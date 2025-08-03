@@ -1,7 +1,7 @@
-# ScalarFlow
+<p align="center"><img src="assets/scalarflow.png" width=300></p>
 
-A pedagogical deep learning library with scalar primitives, inspired by
-[micrograd] and [PyTorch].
+ScalarFlow is a pedagogical deep learning library with scalar primitives,
+inspired by [micrograd] and [PyTorch].
 
 ## Development
 
