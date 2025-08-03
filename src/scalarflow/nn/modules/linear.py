@@ -1,3 +1,4 @@
+from functools import partial
 from typing import override
 
 from scalarflow import Scalar
@@ -34,9 +35,11 @@ class Linear(Module):
 
         match init:
             case InitScheme.HE:
-                init_fn = lambda: he_uniform(in_features)  # noqa: E731
+                init_fn = partial(he_uniform, fan_in=in_features)
             case InitScheme.GLOROT:
-                init_fn = lambda: glorot_uniform(in_features, out_features)  # noqa: E731
+                init_fn = partial(
+                    glorot_uniform, fan_in=in_features, fan_out=out_features
+                )
 
         self.weights: list[list[Scalar]] = [
             [Scalar(init_fn()) for _ in range(in_features)] for _ in range(out_features)
