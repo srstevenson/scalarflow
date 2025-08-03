@@ -27,7 +27,7 @@ reportUnusedCallResult = false
 skip-magic-trailing-comma = true
 
 [tool.ruff.lint]
-ignore = ["D", "COM812", "FIX002", "TD003", "S311"]
+ignore = ["D", "COM812", "EM101", "EM102", "FIX002", "S311", "TD003", "TRY003"]
 select = ["ALL"]
 allowed-confusables = ["×"]
 

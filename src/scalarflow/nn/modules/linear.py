@@ -59,8 +59,7 @@ class Linear(Module):
             ValueError: If input length doesn't match in_features.
         """
         if len(inputs) != self.in_features:
-            msg = f"Expected {self.in_features} inputs, got {len(inputs)}"
-            raise ValueError(msg)
+            raise ValueError(f"Expected {self.in_features} inputs, got {len(inputs)}")
 
         outputs = [
             sum((w * i for w, i in zip(weights, inputs, strict=True)), Scalar(0.0))

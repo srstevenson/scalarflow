@@ -450,8 +450,7 @@ class Scalar:
             ValueError: If min_val is greater than max_val.
         """
         if min_val is not None and max_val is not None and min_val > max_val:
-            msg = f"min_val ({min_val}) must be <= max_val ({max_val})"
-            raise ValueError(msg)
+            raise ValueError(f"min_val ({min_val}) must be <= max_val ({max_val})")
 
         result = self
         if min_val is not None:
