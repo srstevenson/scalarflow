@@ -33,7 +33,7 @@ using:
 make all
 ```
 
-Run `make` to see a list of all available commands.
+Run `make help` to see a list of all available commands.
 
 [basedpyright]: https://docs.basedpyright.com/
 [Graphviz]: https://graphviz.org/
