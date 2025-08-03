@@ -3,7 +3,7 @@ import math
 import pytest
 
 from scalarflow import Scalar
-from scalarflow.nn import InitScheme, Linear, glorot_uniform, he_uniform
+from scalarflow.nn import InitScheme, Linear, ReLU, glorot_uniform, he_uniform
 
 
 def test__he_uniform__bounds() -> None:
@@ -257,3 +257,108 @@ def test__linear__zero_grad_integration() -> None:
     for param in linear.parameters():
         assert param.grad == 0.0
     assert input_scalar.grad == 0.0
+
+
+def test__relu__forward_pass() -> None:
+    relu = ReLU()
+
+    inputs = [Scalar(-2.0), Scalar(-0.5), Scalar(0.0), Scalar(0.5), Scalar(2.0)]
+    outputs = relu(inputs)
+
+    assert len(outputs) == len(inputs)
+    assert outputs[0].data == 0.0  # max(0, -2.0)
+    assert outputs[1].data == 0.0  # max(0, -0.5)
+    assert outputs[2].data == 0.0  # max(0, 0.0)
+    assert outputs[3].data == 0.5  # max(0, 0.5)
+    assert outputs[4].data == 2.0  # max(0, 2.0)
+
+
+def test__relu__empty_input() -> None:
+    relu = ReLU()
+
+    inputs: list[Scalar] = []
+    outputs = relu(inputs)
+
+    assert len(outputs) == 0
+
+
+def test__relu__single_input() -> None:
+    relu = ReLU()
+
+    # Test positive input
+    positive_input = [Scalar(3.0)]
+    positive_output = relu(positive_input)
+    assert len(positive_output) == 1
+    assert positive_output[0].data == 3.0
+
+    # Test negative input
+    negative_input = [Scalar(-1.5)]
+    negative_output = relu(negative_input)
+    assert len(negative_output) == 1
+    assert negative_output[0].data == 0.0
+
+
+def test__relu__parameters() -> None:
+    relu = ReLU()
+    params = relu.parameters()
+
+    # ReLU has no trainable parameters
+    assert len(params) == 0
+    assert params == []
+
+
+def test__relu__gradient_flow() -> None:
+    relu = ReLU()
+
+    # Test positive input (gradient should flow through)
+    positive_input = Scalar(2.0)
+    positive_output = relu([positive_input])[0]
+    positive_output.backward()
+
+    assert positive_input.grad == 1.0  # Gradient flows through
+
+    # Reset gradients
+    positive_input.zero_grad()
+
+    # Test negative input (gradient should be blocked)
+    negative_input = Scalar(-1.0)
+    negative_output = relu([negative_input])[0]
+    negative_output.backward()
+
+    assert negative_input.grad == 0.0  # Gradient is blocked
+
+
+def test__relu__chain_with_linear() -> None:
+    # Test ReLU chained with Linear layer
+    linear = Linear(2, 1, bias=False)
+    relu = ReLU()
+
+    # Set deterministic weights
+    linear.weights[0][0] = Scalar(1.0)
+    linear.weights[0][1] = Scalar(-1.0)
+
+    # Test case where linear output is positive
+    inputs_positive = [Scalar(2.0), Scalar(1.0)]
+    linear_output = linear(inputs_positive)  # 1*2 + (-1)*1 = 1.0
+    relu_output = relu(linear_output)
+
+    assert relu_output[0].data == 1.0  # ReLU(1.0) = 1.0
+
+    # Test case where linear output is negative
+    inputs_negative = [Scalar(1.0), Scalar(2.0)]
+    linear_output = linear(inputs_negative)  # 1*1 + (-1)*2 = -1.0
+    relu_output = relu(linear_output)
+
+    assert relu_output[0].data == 0.0  # ReLU(-1.0) = 0.0
+
+
+def test__relu__multiple_applications() -> None:
+    relu = ReLU()
+
+    # Test that applying ReLU multiple times is idempotent for positive values
+    inputs = [Scalar(5.0), Scalar(-3.0)]
+    first_pass = relu(inputs)
+    second_pass = relu(first_pass)
+
+    assert first_pass[0].data == second_pass[0].data == 5.0
+    assert first_pass[1].data == second_pass[1].data == 0.0
