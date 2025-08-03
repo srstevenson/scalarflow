@@ -1,7 +1,7 @@
 # ScalarFlow
 
-A pedagogical automatic differentiation library with scalar primitives, inspired
-by [micrograd](https://github.com/karpathy/micrograd).
+A pedagogical deep learning library with scalar primitives, inspired by
+[micrograd] and [PyTorch].
 
 ## Development
 
@@ -37,6 +37,8 @@ Run `make` to see a list of all available commands.
 
 [basedpyright]: https://docs.basedpyright.com/
 [Graphviz]: https://graphviz.org/
+[micrograd]: https://github.com/karpathy/micrograd
 [pytest]: https://docs.pytest.org/
+[PyTorch]: https://pytorch.org
 [Ruff]: https://docs.astral.sh/ruff/
 [uv]: https://docs.astral.sh/uv/
