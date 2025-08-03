@@ -3,15 +3,8 @@ import math
 import pytest
 
 from scalarflow import Scalar
-from scalarflow.nn import (
-    InitScheme,
-    Linear,
-    ReLU,
-    Sigmoid,
-    Tanh,
-    glorot_uniform,
-    he_uniform,
-)
+from scalarflow.nn import InitScheme, Linear, ReLU, Sigmoid, Tanh
+from scalarflow.nn.init import glorot_uniform, he_uniform
 
 
 def test__he_uniform__bounds() -> None:
