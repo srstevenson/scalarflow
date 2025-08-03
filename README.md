@@ -9,7 +9,7 @@ ScalarFlow uses [uv] for dependency management. Install the library and its
 dependencies with:
 
 ```bash
-uv sync
+make install
 ```
 
 ScalarFlow requires [Graphviz] for visualisation functionality. Install Graphviz
@@ -26,36 +26,14 @@ pacman -Syu graphviz
 apt install graphviz
 ```
 
-Format code using [Ruff]:
+Format with [Ruff], lint with Ruff and [basedpyright], and test with [pytest]
+using:
 
 ```bash
-uv run ruff format src tests
+make all
 ```
 
-Lint code using [Ruff]:
-
-```bash
-uv run ruff check --fix src tests
-```
-
-Type check using [basedpyright]:
-
-```bash
-uv run basedpyright src tests
-```
-
-Run the test suite using [pytest]:
-
-```bash
-uv run pytest tests
-```
-
-Measure test coverage with:
-
-```bash
-uv run coverage run -m pytest tests
-uv run coverage report
-```
+Run `make` to see a list of all available commands.
 
 [basedpyright]: https://docs.basedpyright.com/
 [Graphviz]: https://graphviz.org/
