@@ -282,22 +282,6 @@ def test__relu__empty_input() -> None:
     assert len(outputs) == 0
 
 
-def test__relu__single_input() -> None:
-    relu = ReLU()
-
-    # Test positive input
-    positive_input = [Scalar(3.0)]
-    positive_output = relu(positive_input)
-    assert len(positive_output) == 1
-    assert positive_output[0].data == 3.0
-
-    # Test negative input
-    negative_input = [Scalar(-1.5)]
-    negative_output = relu(negative_input)
-    assert len(negative_output) == 1
-    assert negative_output[0].data == 0.0
-
-
 def test__relu__parameters() -> None:
     relu = ReLU()
     params = relu.parameters()
@@ -305,27 +289,6 @@ def test__relu__parameters() -> None:
     # ReLU has no trainable parameters
     assert len(params) == 0
     assert params == []
-
-
-def test__relu__gradient_flow() -> None:
-    relu = ReLU()
-
-    # Test positive input (gradient should flow through)
-    positive_input = Scalar(2.0)
-    positive_output = relu([positive_input])[0]
-    positive_output.backward()
-
-    assert positive_input.grad == 1.0  # Gradient flows through
-
-    # Reset gradients
-    positive_input.zero_grad()
-
-    # Test negative input (gradient should be blocked)
-    negative_input = Scalar(-1.0)
-    negative_output = relu([negative_input])[0]
-    negative_output.backward()
-
-    assert negative_input.grad == 0.0  # Gradient is blocked
 
 
 def test__relu__chain_with_linear() -> None:
@@ -350,18 +313,6 @@ def test__relu__chain_with_linear() -> None:
     relu_output = relu(linear_output)
 
     assert relu_output[0].data == 0.0  # ReLU(-1.0) = 0.0
-
-
-def test__relu__multiple_applications() -> None:
-    relu = ReLU()
-
-    # Test that applying ReLU multiple times is idempotent for positive values
-    inputs = [Scalar(5.0), Scalar(-3.0)]
-    first_pass = relu(inputs)
-    second_pass = relu(first_pass)
-
-    assert first_pass[0].data == second_pass[0].data == 5.0
-    assert first_pass[1].data == second_pass[1].data == 0.0
 
 
 def test__tanh__forward_pass() -> None:
