@@ -1,9 +1,17 @@
 import math
 import random
 from abc import ABC, abstractmethod
+from enum import Enum
 from typing import Any, override
 
 from scalarflow import Scalar
+
+
+class InitScheme(Enum):
+    """Weight initialisation schemes."""
+
+    HE = "he"
+    GLOROT = "glorot"
 
 
 def he_uniform(fan_in: int) -> float:
@@ -67,7 +75,12 @@ class Linear(Module):
     """
 
     def __init__(
-        self, in_features: int, out_features: int, *, bias: bool = True
+        self,
+        in_features: int,
+        out_features: int,
+        *,
+        bias: bool = True,
+        init: InitScheme = InitScheme.HE,
     ) -> None:
         """Initialise the linear layer.
 
@@ -75,13 +88,20 @@ class Linear(Module):
             in_features: Size of each input sample.
             out_features: Size of each output sample.
             bias: If True, adds a learnable bias to the output.
+            init: Weight initialisation scheme to use.
         """
         self.in_features: int = in_features
         self.out_features: int = out_features
         self.use_bias: bool = bias
+
+        match init:
+            case InitScheme.HE:
+                init_fn = lambda: he_uniform(in_features)  # noqa: E731
+            case InitScheme.GLOROT:
+                init_fn = lambda: glorot_uniform(in_features, out_features)  # noqa: E731
+
         self.weights: list[list[Scalar]] = [
-            [Scalar(he_uniform(in_features)) for _ in range(in_features)]
-            for _ in range(out_features)
+            [Scalar(init_fn()) for _ in range(in_features)] for _ in range(out_features)
         ]
         self.biases: list[Scalar] | None = (
             [Scalar(0.0) for _ in range(out_features)] if bias else None

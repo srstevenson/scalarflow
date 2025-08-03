@@ -3,7 +3,7 @@ import math
 import pytest
 
 from scalarflow import Scalar
-from scalarflow.nn import Linear, glorot_uniform, he_uniform
+from scalarflow.nn import InitScheme, Linear, glorot_uniform, he_uniform
 
 
 def test__he_uniform__bounds() -> None:
@@ -116,6 +116,18 @@ def test__linear__init() -> None:
     assert len(linear.weights[0]) == 3  # in_features columns
     assert linear.biases is not None
     assert len(linear.biases) == 2  # out_features biases
+
+
+@pytest.mark.parametrize("init_scheme", [InitScheme.HE, InitScheme.GLOROT])
+def test__linear__init_schemes(init_scheme: InitScheme) -> None:
+    linear = Linear(3, 2, init=init_scheme)
+
+    assert linear.in_features == 3
+    assert linear.out_features == 2
+    assert len(linear.weights) == 2
+    assert len(linear.weights[0]) == 3
+    assert linear.biases is not None
+    assert len(linear.biases) == 2
 
 
 def test__linear__init_without_bias() -> None:
