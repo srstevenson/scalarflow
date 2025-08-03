@@ -1,8 +1,30 @@
+import math
 import random
 from abc import ABC, abstractmethod
 from typing import Any, override
 
 from scalarflow import Scalar
+
+
+def he_uniform(fan_in: int) -> float:
+    """He (Kaiming) uniform initialization.
+
+    Samples from uniform distribution U(-bound, bound) where
+    bound = sqrt(6 / fan_in). Designed for ReLU-family activations.
+
+    Reference:
+        Delving Deep into Rectifiers: Surpassing Human-Level Performance on
+        ImageNet Classification (He et al., 2015)
+        https://arxiv.org/abs/1502.01852
+
+    Args:
+        fan_in: Number of input units.
+
+    Returns:
+        Random weight value following He uniform distribution.
+    """
+    bound = math.sqrt(6.0 / fan_in)
+    return random.uniform(-bound, bound)
 
 
 class Module(ABC):
@@ -36,8 +58,7 @@ class Linear(Module):
         self.out_features: int = out_features
         self.use_bias: bool = bias
         self.weights: list[list[Scalar]] = [
-            # TODO(srstevenson): Glorot and He initialisation.
-            [Scalar(random.uniform(-1.0, 1.0)) for _ in range(in_features)]
+            [Scalar(he_uniform(in_features)) for _ in range(in_features)]
             for _ in range(out_features)
         ]
         self.biases: list[Scalar] | None = (
