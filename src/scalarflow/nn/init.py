@@ -11,7 +11,7 @@ class InitScheme(Enum):
 
 
 def he_uniform(fan_in: int) -> float:
-    """He (Kaiming) uniform initialization.
+    """He (Kaiming) uniform initialisation.
 
     Samples from uniform distribution U(-bound, bound) where
     bound = sqrt(6 / fan_in). Designed for ReLU-family activations.
@@ -32,7 +32,7 @@ def he_uniform(fan_in: int) -> float:
 
 
 def glorot_uniform(fan_in: int, fan_out: int) -> float:
-    """Glorot (Xavier) uniform initialization.
+    """Glorot (Xavier) uniform initialisation.
 
     Samples from uniform distribution U(-bound, bound) where
     bound = sqrt(6 / (fan_in + fan_out)). Designed for tanh/sigmoid activations.
