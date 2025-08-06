@@ -8,7 +8,7 @@ class Tanh(Module):
     """Tanh activation function module.
 
     Applies the hyperbolic tangent function element-wise to input scalars.
-    tanh(x) = (e^x - e^(-x)) / (e^x + e^(-x)).
+    tanh(x) = (eˣ - e⁻ˣ) / (eˣ + e⁻ˣ).
     """
 
     @override

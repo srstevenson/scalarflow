@@ -281,7 +281,7 @@ class Scalar:
         """Apply the sigmoid function.
 
         Returns:
-            A new Scalar with sigmoid applied: 1 / (1 + exp(-self)).
+            A new Scalar with sigmoid applied: 1 / (1 + e⁻ˣ).
         """
         result = Scalar(1 / (1 + math.exp(-self.data)), "sigmoid", (self,))
 

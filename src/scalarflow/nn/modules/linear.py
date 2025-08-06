@@ -9,7 +9,7 @@ from scalarflow.nn.init import InitScheme, glorot_uniform, he_uniform
 class Linear(Module):
     """A linear (fully connected) layer.
 
-    Applies a linear transformation to incoming data: y = xW^T + b where W is
+    Applies a linear transformation to incoming data: y = xWᵀ + b where W is
     the weight matrix and b is the bias vector.
     """
 

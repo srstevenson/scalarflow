@@ -8,7 +8,7 @@ class Sigmoid(Module):
     """Sigmoid activation function module.
 
     Applies the sigmoid function element-wise to input scalars.
-    sigmoid(x) = 1 / (1 + e^(-x)).
+    sigmoid(x) = 1 / (1 + e⁻ˣ).
     """
 
     @override

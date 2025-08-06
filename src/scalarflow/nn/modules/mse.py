@@ -8,7 +8,7 @@ class MSELoss(Module):
     """Mean Squared Error (MSE) loss function module.
 
     Computes the mean squared error between predictions and targets:
-    MSE = (1/n) * Σ(predictions[i] - targets[i])²
+    MSE = (1/n) × Σ(predictions[i] - targets[i])²
     """
 
     @override

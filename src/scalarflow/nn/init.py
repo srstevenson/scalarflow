@@ -14,7 +14,7 @@ def he_uniform(fan_in: int) -> float:
     """He (Kaiming) uniform initialisation.
 
     Samples from uniform distribution U(-bound, bound) where
-    bound = sqrt(6 / fan_in). Designed for ReLU-family activations.
+    bound = √(6 / fan_in). Designed for ReLU-family activations.
 
     Reference:
         Delving Deep into Rectifiers: Surpassing Human-Level Performance on
@@ -35,7 +35,7 @@ def glorot_uniform(fan_in: int, fan_out: int) -> float:
     """Glorot (Xavier) uniform initialisation.
 
     Samples from uniform distribution U(-bound, bound) where
-    bound = sqrt(6 / (fan_in + fan_out)). Designed for tanh/sigmoid activations.
+    bound = √(6 / (fan_in + fan_out)). Designed for tanh/sigmoid activations.
 
     Reference:
         Understanding the difficulty of training deep feedforward neural
