@@ -80,17 +80,13 @@ class HuberLoss(Module):
         error = prediction - target
         abs_error = error.abs()
 
-        delta_scalar = Scalar(self.delta)
-        delta_squared = Scalar(self.delta**2)
+        # Use the quadratic loss when |error| <= δ, and add the linear excess
+        # when |error| > δ i.e.
+        # min(0.5*error², 0.5*δ²) + δ*max(0, |error| - δ)
+        quadratic_part = 0.5 * error * error
+        clamped_quadratic = quadratic_part.min(0.5 * self.delta**2)
 
-        # Use the quadratic loss when |error| <= delta, and add the linear
-        # excess when |error| > delta i.e.
-        # min(0.5*error², 0.5*delta²) + delta*max(0, |error| - delta)
-
-        quadratic_part = Scalar(0.5) * error * error
-        clamped_quadratic = quadratic_part.min(Scalar(0.5) * delta_squared)
-
-        linear_part = delta_scalar * (abs_error - delta_scalar).max(Scalar(0.0))
+        linear_part = self.delta * (abs_error - self.delta).max(0)
 
         return clamped_quadratic + linear_part
 
