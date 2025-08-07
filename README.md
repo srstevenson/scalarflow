@@ -9,30 +9,38 @@ visualisation.
 
 ScalarFlow is built around a `Scalar` class that enables automatic
 differentiation. The library also includes a neural network module
-(`scalarflow.nn`) modelled on PyTorch's, with a `Module` base class and common
-layers like `Linear`, `ReLU`, `Tanh`, `MSELoss`, and `Sequential`.
+(`scalarflow.nn`) and an optimisation module (`scalarflow.optim`), both modelled
+on PyTorch's API. The neural network module provides a `Module` base class and
+common layers like `Linear`, `ReLU`, `Tanh`, `MSELoss`, and `Sequential`. The
+optimisation module includes optimisers like `SGD` for training neural networks.
 
 ## Usage
 
-The following snippet shows how to use ScalarFlow to create a model, perform a
-forward pass, and backpropagate the loss:
+The following snippet shows how to use ScalarFlow to create a model, set up an
+optimiser, and perform a complete training step:
 
 ```python
-from scalarflow import Scalar, nn
+from scalarflow import Scalar, nn, optim
 
 model = nn.Sequential([nn.Linear(1, 8), nn.ReLU(), nn.Linear(8, 1)])
 loss_fn = nn.MSELoss()
+optimiser = optim.SGD(model.parameters(), lr=0.01)
+
+x = [Scalar(2.0)]
+y = [Scalar(4.0)]
 
 # Forward pass
-x = [Scalar(2.0)]
-y_target = [Scalar(4.0)]
-y_pred = model(x)
+y_hat = model(x)
+loss = loss_fn(y_hat, y)[0]
 
 # Backward pass
-loss = loss_fn(y_pred, y_target)[0]
 loss.backward()
 
-print(f"{loss.data=:.4f}")
+# Update parameters
+optimiser.step()
+optimiser.zero_grad()
+
+print(f"Loss: {loss.data:.4f}")
 ```
 
 For a more complete example, see
