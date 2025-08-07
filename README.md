@@ -44,8 +44,10 @@ print(f"Loss: {loss.data:.4f}")
 ```
 
 For a more complete example, see
-[`examples/quadratic.py`](examples/quadratic.py), which trains a model on a
-dataset of random data.
+[`examples/quadratic.py`](examples/quadratic.py). This example demonstrates a
+training loop that learns to approximate the quadratic function $y = x^2$ using
+a model with a single hidden layer. The model is trained over 1000 epochs using
+stochastic gradient descent on randomly generated data.
 
 ```
 $ uv run examples/quadratic.py
