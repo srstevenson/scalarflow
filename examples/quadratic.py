@@ -2,7 +2,7 @@ import math
 import random
 from dataclasses import dataclass
 
-from scalarflow import Scalar, nn
+from scalarflow import Scalar, nn, optim
 
 type Dataset = list[tuple[float, float]]
 
@@ -56,7 +56,7 @@ def train_sample(model: nn.Module, loss_fn: nn.Module, x: float, y: float) -> fl
 
 
 def train_epoch(
-    model: nn.Module, loss_fn: nn.Module, dataset: Dataset, lr: float
+    model: nn.Module, loss_fn: nn.Module, dataset: Dataset, optimiser: optim.Optimiser
 ) -> float:
     """Train the model for one epoch.
 
@@ -64,7 +64,7 @@ def train_epoch(
         model: The model to train.
         loss_fn: The loss function to use.
         dataset: The dataset to train on.
-        lr: The learning rate.
+        optimiser: The optimiser to use for parameter updates.
 
     Returns:
         The total loss for the epoch.
@@ -73,9 +73,8 @@ def train_epoch(
     for x, y in dataset:
         total_loss += train_sample(model, loss_fn, x, y)
 
-    for param in model.parameters():
-        param.data -= lr * param.grad
-        param.zero_grad()
+    optimiser.step()
+    optimiser.zero_grad()
 
     return total_loss
 
@@ -112,6 +111,7 @@ def main() -> None:
 
     model = nn.Sequential([nn.Linear(1, 8), nn.ReLU(), nn.Linear(8, 1)])
     loss_fn = nn.MSELoss()
+    optimiser = optim.SGD(model.parameters(), params.lr)
 
     print(  # noqa: T201
         f"{'Epoch':<5} | {'Train Loss':<10} | {'Train RMSE':<10} | "
@@ -120,7 +120,7 @@ def main() -> None:
     print(f"{'-' * 5} | {'-' * 10} | {'-' * 10} | {'-' * 8} | {'-' * 8}")  # noqa: T201
 
     for epoch in range(params.n_epochs + 1):
-        train_loss = train_epoch(model, loss_fn, train_dataset, params.lr)
+        train_loss = train_epoch(model, loss_fn, train_dataset, optimiser)
         val_loss = evaluate_epoch(model, loss_fn, val_dataset)
 
         if epoch % 100 == 0:
