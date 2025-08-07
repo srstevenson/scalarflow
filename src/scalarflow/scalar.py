@@ -83,7 +83,11 @@ class Scalar:
 
         def backward() -> None:
             self.grad += other.data * self.data ** (other.data - 1) * result.grad
-            other.grad += result.data * math.log(self.data) * result.grad
+
+            # The derivative of x^y w.r.t. y is x^y * log(x). Due to the log(x),
+            # this is only defined for x > 0.
+            if self.data > 0:
+                other.grad += result.data * math.log(self.data) * result.grad
 
         result.backward_step = backward
         return result

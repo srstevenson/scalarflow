@@ -202,6 +202,40 @@ def test__scalar__pow__backward() -> None:
     assert y.grad == 8.0 * math.log(2.0)
 
 
+def test__scalar__pow__backward_negative_base_integer_exponent() -> None:
+    x = Scalar(-2.0)
+    y = 3
+    z = x**y
+    z.backward()
+
+    # For z = x^y: ∂z/∂x = y * x^(y-1) = 3 * (-2)^2 = 12
+    assert x.grad == 12.0
+
+
+def test__scalar__pow__backward_negative_base_scalar_exponent() -> None:
+    x = Scalar(-2.0)
+    y = Scalar(3.0)
+    z = x**y
+    z.backward()
+
+    # For z = x^y: ∂z/∂x = y * x^(y-1) = 3 * (-2)^2 = 12
+    # For z = x^y: ∂z/∂y = x^y * ln(x) is undefined for x < 0, so grad should be 0
+    assert x.grad == 12.0
+    assert y.grad == 0.0
+
+
+def test__scalar__pow__backward_positive_base_scalar_exponent() -> None:
+    x = Scalar(2.0)
+    y = Scalar(3.0)
+    z = x**y
+    z.backward()
+
+    # For z = x^y: ∂z/∂x = y * x^(y-1) = 3 * 2^2 = 12
+    # For z = x^y: ∂z/∂y = x^y * ln(x) = 8 * ln(2)
+    assert x.grad == 12.0
+    assert y.grad == 8.0 * math.log(2.0)
+
+
 def test__scalar__backward_single_node() -> None:
     x = Scalar(5.0)
     x.backward()
