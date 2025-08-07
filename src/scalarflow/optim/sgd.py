@@ -33,9 +33,3 @@ class SGD(Optimiser):
         """Perform a single SGD optimisation step."""
         for param in self.params:
             param.data -= self.lr * param.grad
-
-    @override
-    def zero_grad(self) -> None:
-        """Clear gradients of all parameters."""
-        for param in self.params:
-            param.zero_grad()
