@@ -9,22 +9,22 @@ install:
 
 .PHONY: fmt
 fmt:
-	uv run ruff format src tests examples
+	uv run ruff format
 
 .PHONY: lint
 lint:
-	uv run ruff check --fix src tests examples
-	uv run basedpyright src tests examples
+	uv run ruff check --fix
+	uv run basedpyright
 
 .PHONY: check
 check:
-	uv run ruff format --check src tests examples
-	uv run ruff check src tests examples
-	uv run basedpyright src tests examples
+	uv run ruff format --check
+	uv run ruff check
+	uv run basedpyright
 
 .PHONY: test
 test:
-	uv run coverage run -m pytest tests
+	uv run coverage run -m pytest
 	uv run coverage report
 
 .PHONY: help
