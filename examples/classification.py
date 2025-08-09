@@ -30,6 +30,12 @@ def generate_dataset(*, n_samples: int) -> Dataset:
     Returns a balanced dataset of two classes placed on noisy concentric
     circles. The negative class is near radius 0.7 and the positive class near
     radius 1.4.
+
+    Args:
+        n_samples: The number of samples to generate.
+
+    Returns:
+        A list of tuples, where each tuple contains input coordinates and class label.
     """
     half = n_samples // 2
     data: Dataset = []
@@ -51,7 +57,17 @@ def generate_dataset(*, n_samples: int) -> Dataset:
 def train_sample(
     model: nn.Module, loss_fn: nn.Module, sample: tuple[float, float], target: int
 ) -> float:
-    """Train the model on a single sample and return the loss value."""
+    """Train the model on a single sample and return the loss value.
+
+    Args:
+        model: The model to train.
+        loss_fn: The loss function to use.
+        sample: The input sample as a tuple of (x1, x2) coordinates.
+        target: The target class label.
+
+    Returns:
+        The loss value for the sample.
+    """
     x1, x2 = sample
     y_hat = model([Scalar(x1), Scalar(x2)])
     loss = loss_fn(y_hat, [Scalar(target)])[0]
