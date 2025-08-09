@@ -35,11 +35,9 @@ class Linear(Module):
 
         match init:
             case InitScheme.HE:
-                init_fn = partial(he_uniform, fan_in=in_features)
+                init_fn = partial(he_uniform, n_in=in_features)
             case InitScheme.GLOROT:
-                init_fn = partial(
-                    glorot_uniform, fan_in=in_features, fan_out=out_features
-                )
+                init_fn = partial(glorot_uniform, n_in=in_features, n_out=out_features)
 
         self.weights: list[list[Scalar]] = [
             [Scalar(init_fn()) for _ in range(in_features)] for _ in range(out_features)
