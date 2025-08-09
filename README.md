@@ -44,13 +44,13 @@ print(f"Loss: {loss.data:.4f}")
 ```
 
 For a more complete example, see
-[`examples/quadratic.py`](examples/quadratic.py). This example demonstrates a
+[`examples/regression.py`](examples/regression.py). This example demonstrates a
 training loop that learns to approximate the quadratic function $y = x^2$ using
 a model with a single hidden layer. The model is trained over 1000 epochs using
 stochastic gradient descent on randomly generated data.
 
 ```
-$ uv run examples/quadratic.py
+$ uv run examples/regression.py
 Epoch | Train Loss | Train RMSE | Val Loss | Val RMSE
 ----- | ---------- | ---------- | -------- | --------
     0 |     0.3220 |     0.5674 |   0.1879 |   0.4335

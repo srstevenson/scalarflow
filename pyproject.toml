@@ -39,4 +39,5 @@ ban-relative-imports = "all"
 split-on-trailing-comma = false
 
 [tool.ruff.lint.per-file-ignores]
+"examples/**.py" = ["T201"]
 "tests/**.py" = ["PLR2004", "S101"]

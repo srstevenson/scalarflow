@@ -113,11 +113,8 @@ def main() -> None:
     loss_fn = nn.MSELoss()
     optimiser = optim.SGD(model.parameters(), params.lr)
 
-    print(  # noqa: T201
-        f"{'Epoch':<5} | {'Train Loss':<10} | {'Train RMSE':<10} | "
-        f"{'Val Loss':<8} | {'Val RMSE':<8}"
-    )
-    print(f"{'-' * 5} | {'-' * 10} | {'-' * 10} | {'-' * 8} | {'-' * 8}")  # noqa: T201
+    print("Epoch | Train Loss | Train RMSE | Val Loss | Val RMSE")
+    print("----- | ---------- | ---------- | -------- | --------")
 
     for epoch in range(params.n_epochs + 1):
         train_loss = train_epoch(model, loss_fn, train_dataset, optimiser)
@@ -128,7 +125,7 @@ def main() -> None:
             avg_val_loss = val_loss / len(val_dataset)
             train_rmse = math.sqrt(avg_train_loss)
             val_rmse = math.sqrt(avg_val_loss)
-            print(  # noqa: T201
+            print(
                 f"{epoch:>5} | {avg_train_loss:>10.4f} | {train_rmse:>10.4f} | "
                 f"{avg_val_loss:>8.4f} | {val_rmse:>8.4f}"
             )
