@@ -1,6 +1,7 @@
 from scalarflow.nn.base import Module
 from scalarflow.nn.init import InitScheme
 from scalarflow.nn.modules import (
+    BCELoss,
     HuberLoss,
     Linear,
     MAELoss,
@@ -12,6 +13,7 @@ from scalarflow.nn.modules import (
 )
 
 __all__ = [
+    "BCELoss",
     "HuberLoss",
     "InitScheme",
     "Linear",
