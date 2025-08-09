@@ -4,8 +4,7 @@ from dataclasses import dataclass
 
 from scalarflow import Scalar, nn, optim
 
-type Example = tuple[tuple[float, float], int]
-type Dataset = list[Example]
+type Dataset = list[tuple[tuple[float, float], int]]
 
 
 @dataclass(frozen=True)
