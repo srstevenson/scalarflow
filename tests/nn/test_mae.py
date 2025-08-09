@@ -70,7 +70,7 @@ def test__mae_loss__parameters() -> None:
     assert params == []
 
 
-def test__mae_loss__gradient_flow() -> None:
+def test__mae_loss__backward() -> None:
     mae = MAELoss()
 
     predictions = [Scalar(2.0), Scalar(4.0)]
@@ -88,7 +88,7 @@ def test__mae_loss__gradient_flow() -> None:
     assert predictions[1].grad == 0.5
 
 
-def test__mae_loss__gradient_flow_negative_errors() -> None:
+def test__mae_loss__backward_negative_errors() -> None:
     mae = MAELoss()
 
     predictions = [Scalar(1.0), Scalar(3.0)]
@@ -106,7 +106,7 @@ def test__mae_loss__gradient_flow_negative_errors() -> None:
     assert predictions[1].grad == -0.5
 
 
-def test__mae_loss__gradient_flow_mixed_errors() -> None:
+def test__mae_loss__backward_mixed_errors() -> None:
     mae = MAELoss()
 
     predictions = [Scalar(3.0), Scalar(1.0)]

@@ -70,7 +70,7 @@ def test__mse_loss__parameters() -> None:
     assert params == []
 
 
-def test__mse_loss__gradient_flow() -> None:
+def test__mse_loss__backward() -> None:
     mse = MSELoss()
 
     predictions = [Scalar(2.0), Scalar(4.0)]

@@ -113,7 +113,7 @@ def test__linear__parameters_without_bias() -> None:
     assert len(params) == 4
 
 
-def test__linear__gradient_flow() -> None:
+def test__linear__backward() -> None:
     linear = Linear(1, 1, bias=True)
 
     # Set simple weights

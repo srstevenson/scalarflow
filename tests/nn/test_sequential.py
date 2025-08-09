@@ -63,7 +63,7 @@ def test__sequential__parameters_with_no_trainable_modules() -> None:
     assert model.parameters() == []
 
 
-def test__sequential__gradient_flow() -> None:
+def test__sequential__backward() -> None:
     linear = Linear(1, 1, bias=True)
     linear.weights[0][0] = Scalar(2.0)
     assert linear.biases is not None

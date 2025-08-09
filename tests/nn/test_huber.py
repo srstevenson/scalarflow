@@ -121,7 +121,7 @@ def test__huber_loss__parameters() -> None:
     assert params == []
 
 
-def test__huber_loss__gradient_flow_quadratic() -> None:
+def test__huber_loss__backward_quadratic() -> None:
     huber = HuberLoss(delta=1.0)
 
     predictions = [Scalar(1.5), Scalar(2.2)]
@@ -137,7 +137,7 @@ def test__huber_loss__gradient_flow_quadratic() -> None:
     assert predictions[1].grad == pytest.approx(0.1)  # pyright: ignore[reportUnknownMemberType]
 
 
-def test__huber_loss__gradient_flow_linear() -> None:
+def test__huber_loss__backward_linear() -> None:
     huber = HuberLoss(delta=1.0)
 
     predictions = [Scalar(3.0), Scalar(-1.0)]
@@ -153,7 +153,7 @@ def test__huber_loss__gradient_flow_linear() -> None:
     assert predictions[1].grad == -0.5
 
 
-def test__huber_loss__gradient_flow_mixed() -> None:
+def test__huber_loss__backward_mixed() -> None:
     huber = HuberLoss(delta=1.0)
 
     predictions = [Scalar(1.5), Scalar(3.0)]
