@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from collections.abc import Sequence
 
 from scalarflow import Scalar
 
@@ -11,13 +12,13 @@ class Optimiser(ABC):
     methods.
     """
 
-    def __init__(self, params: list[Scalar]) -> None:
+    def __init__(self, params: Sequence[Scalar]) -> None:
         """Initialise the optimiser.
 
         Args:
-            params: List of parameters to optimise.
+            params: Sequence of parameters to optimise.
         """
-        self.params: list[Scalar] = params
+        self.params: list[Scalar] = list(params)
 
     @abstractmethod
     def step(self) -> None:

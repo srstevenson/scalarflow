@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 from typing import override
 
 from scalarflow import Scalar
@@ -12,14 +13,14 @@ class Sequential(Module):
     of one module as input to the next.
     """
 
-    def __init__(self, modules: list[Module]) -> None:
+    def __init__(self, modules: Sequence[Module]) -> None:
         """Initialise the sequential container.
 
         Args:
-            modules: List of modules to apply in sequence.
+            modules: Sequence of modules to apply in sequence.
 
         Raises:
-            ValueError: If modules list is empty.
+            ValueError: If modules sequence is empty.
         """
         if not modules:
             raise ValueError(f"{self.__class__.__name__} requires at least one module")

@@ -10,7 +10,7 @@ def test__sgd__init() -> None:
 
     sgd = SGD(params, lr)
 
-    assert sgd.params is params
+    assert sgd.params == params
     assert sgd.lr == lr
 
 

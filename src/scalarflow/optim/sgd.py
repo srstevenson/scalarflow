@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 from typing import override
 
 from scalarflow import Scalar
@@ -11,11 +12,11 @@ class SGD(Optimiser):
     with a fixed learning rate.
     """
 
-    def __init__(self, params: list[Scalar], lr: float) -> None:
+    def __init__(self, params: Sequence[Scalar], lr: float) -> None:
         """Initialise the SGD optimiser.
 
         Args:
-            params: List of parameters to optimise.
+            params: Sequence of parameters to optimise.
             lr: Learning rate for gradient descent.
 
         Raises:
