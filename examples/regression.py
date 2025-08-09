@@ -121,13 +121,13 @@ def main() -> None:
         val_loss = evaluate_epoch(model, loss_fn, val_dataset)
 
         if epoch % 100 == 0:
-            avg_train_loss = train_loss / len(train_dataset)
-            avg_val_loss = val_loss / len(val_dataset)
-            train_rmse = math.sqrt(avg_train_loss)
-            val_rmse = math.sqrt(avg_val_loss)
+            mean_train_loss = train_loss / len(train_dataset)
+            mean_val_loss = val_loss / len(val_dataset)
+            train_rmse = math.sqrt(mean_train_loss)
+            val_rmse = math.sqrt(mean_val_loss)
             print(
-                f"{epoch:>5} | {avg_train_loss:>10.4f} | {train_rmse:>10.4f} | "
-                f"{avg_val_loss:>8.4f} | {val_rmse:>8.4f}"
+                f"{epoch:>5} | {mean_train_loss:>10.4f} | {train_rmse:>10.4f} | "
+                f"{mean_val_loss:>8.4f} | {val_rmse:>8.4f}"
             )
 
 
