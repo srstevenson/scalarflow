@@ -8,8 +8,8 @@ class Sequential(Module):
     """A sequential container for neural network modules.
 
     Modules will be added to the sequential container in the order they are
-    passed. The forward pass applies each module in sequence, passing the
-    output of one module as input to the next.
+    passed. The forward pass applies each module in sequence, passing the output
+    of one module as input to the next.
     """
 
     def __init__(self, modules: list[Module]) -> None:
@@ -43,7 +43,7 @@ class Sequential(Module):
 
     @override
     def parameters(self) -> list[Scalar]:
-        """Return all trainable parameters from all contained modules.
+        """List trainable parameters from all contained modules.
 
         Returns:
             List containing all parameters from all modules in order.

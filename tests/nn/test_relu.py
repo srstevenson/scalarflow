@@ -29,8 +29,6 @@ def test__relu__parameters() -> None:
     relu = ReLU()
     params = relu.parameters()
 
-    # ReLU has no trainable parameters
-    assert len(params) == 0
     assert params == []
 
 

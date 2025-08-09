@@ -1,10 +1,8 @@
-"""Scalar-based automatic differentiation implementation.
+"""Scalar-based automatic differentiation.
 
 This module provides the core Scalar class for automatic differentiation,
-implementing a computational graph where each scalar tracks its value,
-gradient, and dependencies. The implementation supports reverse-mode automatic
-differentiation (backpropagation) with support for arithmetic operations,
-mathematical functions, and commonly used activation functions.
+implementing a computational graph where each scalar tracks its value, gradient,
+and dependencies.
 """
 
 from __future__ import annotations
@@ -22,7 +20,7 @@ class Scalar:
 
     This class implements a scalar-based automatic differentiation system, where
     each scalar tracks its value, gradient, and computational dependencies to
-    enable reverse-mode automatic differentiation (backpropagation).
+    enable reverse-mode automatic differentiation via backpropagation.
 
     Attributes:
         data: The scalar value stored in this node.
@@ -84,8 +82,8 @@ class Scalar:
         def backward() -> None:
             self.grad += other.data * self.data ** (other.data - 1) * result.grad
 
-            # The derivative of x^y w.r.t. y is x^y * log(x). Due to the log(x),
-            # this is only defined for x > 0.
+            # The derivative of x^y with respect to y is x^y * log(x). Due to
+            # the log(x), this is only defined for x > 0.
             if self.data > 0:
                 other.grad += result.data * math.log(self.data) * result.grad
 
@@ -221,8 +219,7 @@ class Scalar:
 
         This method initiates backpropagation from this scalar, computing
         gradients for all scalars in the computational graph that led to this
-        scalar. The gradient computation uses topological sorting to ensure
-        gradients are computed in the correct order.
+        scalar.
         """
         self.grad = 1.0
 
@@ -241,8 +238,8 @@ class Scalar:
         """Reset gradients to zero for this scalar and all its dependencies.
 
         This method traverses the computational graph starting from this scalar
-        and sets the gradient of every scalar in the graph to zero. This is
-        typically called before performing a new backward pass.
+        and sets the gradient of every scalar in the graph to zero. This should
+        be called before performing a new backward pass.
         """
         visited: set[Scalar] = set()
         stack: list[Scalar] = [self]
@@ -285,7 +282,7 @@ class Scalar:
         """Apply the sigmoid function.
 
         Returns:
-            A new Scalar with sigmoid applied: 1 / (1 + e⁻ˣ).
+            A new Scalar with sigmoid applied: 1 / (1 + exp(-x)).
         """
         result = Scalar(1 / (1 + math.exp(-self.data)), "sigmoid", (self,))
 

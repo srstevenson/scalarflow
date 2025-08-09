@@ -14,12 +14,12 @@ def he_uniform(n_in: int) -> float:
     """He (Kaiming) uniform initialisation.
 
     Samples from uniform distribution U(-bound, bound) where
-    bound = sqrt(6 / n_in). Designed for ReLU-family activations.
+    bound = sqrt(6 / n_in). Designed for ReLU activations.
 
     Reference:
         Delving Deep into Rectifiers: Surpassing Human-Level Performance on
         ImageNet Classification (He et al., 2015)
-        https://arxiv.org/abs/1502.01852
+        <https://arxiv.org/abs/1502.01852>
 
     Args:
         n_in: Number of input units.
@@ -40,7 +40,7 @@ def glorot_uniform(n_in: int, n_out: int) -> float:
     Reference:
         Understanding the difficulty of training deep feedforward neural
         networks (Glorot & Bengio, 2010)
-        http://proceedings.mlr.press/v9/glorot10a.html
+        <http://proceedings.mlr.press/v9/glorot10a.html>
 
     Args:
         n_in: Number of input units.

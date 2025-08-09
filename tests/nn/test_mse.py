@@ -11,7 +11,7 @@ def test__mse_loss__forward_pass() -> None:
     targets = [Scalar(1.0), Scalar(3.0), Scalar(2.0)]
     outputs = mse(predictions, targets)
 
-    # MSE = ((2-1)² + (3-3)² + (1-2)²) / 3 = (1 + 0 + 1) / 3 = 2/3
+    # ((2-1)^2 + (3-3)^2 + (1-2)^2) / 3 = (1 + 0 + 1) / 3 = 2/3
     assert len(outputs) == 1
     assert outputs[0].data == (2.0 / 3.0)
 
@@ -34,7 +34,7 @@ def test__mse_loss__single_value() -> None:
     targets = [Scalar(2.0)]
     outputs = mse(predictions, targets)
 
-    # MSE = (5-2)² / 1 = 9
+    # (5-2)^2 / 1 = 9
     assert len(outputs) == 1
     assert outputs[0].data == 9.0
 
@@ -79,11 +79,11 @@ def test__mse_loss__gradient_flow() -> None:
     loss = mse(predictions, targets)[0]
     loss.backward()
 
-    # MSE = ((2-1)² + (4-3)²) / 2 = (1 + 1) / 2 = 1
+    # ((2-1)^2 + (4-3)^2) / 2 = (1 + 1) / 2 = 1
     assert loss.data == 1.0
 
-    # ∂MSE/∂pred₁ = 2(pred₁ - target₁) / n = 2(2-1) / 2 = 1
-    # ∂MSE/∂pred₂ = 2(pred₂ - target₂) / n = 2(4-3) / 2 = 1
+    # d(MSE)/d(pred1) = 2(pred1 - target1) / n = 2(2-1) / 2 = 1
+    # d(MSE)/d(pred2) = 2(pred2 - target2) / n = 2(4-3) / 2 = 1
     assert predictions[0].grad == 1.0
     assert predictions[1].grad == 1.0
 
@@ -99,14 +99,14 @@ def test__mse_loss__integration_with_linear() -> None:
     inputs = [Scalar(3.0)]
     predictions = linear(inputs)  # 2 * 3 = 6
     targets = [Scalar(4.0)]
-    loss = mse(predictions, targets)[0]  # (6-4)² / 1 = 4
+    loss = mse(predictions, targets)[0]  # (6-4)^2 / 1 = 4
 
     assert loss.data == 4.0
 
     # Backward pass
     loss.backward()
 
-    # ∂loss/∂weight = ∂loss/∂pred * ∂pred/∂weight = 4 * 3
+    # d(loss)/d(weight) = d(loss)/d(pred) * d(pred)/d(weight) = 4 * 3
     assert linear.weights[0][0].grad == 12.0
-    # ∂loss/∂input = ∂loss/∂pred * ∂pred/∂input = 4 * 2
+    # d(loss)/d(input) = d(loss)/d(pred) * d(pred)/d(input) = 4 * 2
     assert inputs[0].grad == 8.0

@@ -7,10 +7,10 @@ from scalarflow.nn.init import InitScheme, glorot_uniform, he_uniform
 
 
 class Linear(Module):
-    """A linear (fully connected) layer.
+    """A linear (a.k.a. fully connected, a.k.a. dense) layer.
 
-    Applies a linear transformation to incoming data: y = xWᵀ + b where W is
-    the weight matrix and b is the bias vector.
+    Applies a linear transformation xW^T + b to input data x where W is the
+    weight matrix and b is the bias vector.
     """
 
     def __init__(
@@ -21,7 +21,7 @@ class Linear(Module):
         bias: bool = True,
         init: InitScheme = InitScheme.HE,
     ) -> None:
-        """Initialise the linear layer.
+        """Initialise a linear layer.
 
         Args:
             in_features: Size of each input sample.
@@ -74,7 +74,7 @@ class Linear(Module):
 
     @override
     def parameters(self) -> list[Scalar]:
-        """Return all trainable parameters in the layer.
+        """List trainable parameters in the layer.
 
         Returns:
             List containing all weight and bias scalars.

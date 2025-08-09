@@ -185,7 +185,7 @@ def test__scalar__mul__backward() -> None:
     z = x * y
     z.backward()
 
-    # For z = x * y: ∂z/∂x = y = 3.0, ∂z/∂y = x = 2.0
+    # For z = x * y: dz/dx = y = 3.0, dz/dy = x = 2.0
     assert x.grad == 3.0
     assert y.grad == 2.0
 
@@ -196,8 +196,8 @@ def test__scalar__pow__backward() -> None:
     z = x**y
     z.backward()
 
-    # For z = x^y: ∂z/∂x = y * x^(y-1) = 3 * 2^2 = 12
-    # For z = x^y: ∂z/∂y = x^y * ln(x) = 8 * ln(2)
+    # For z = x^y: dz/dx = y * x^(y-1) = 3 * 2^2 = 12
+    # For z = x^y: dz/dy = x^y * ln(x) = 8 * ln(2)
     assert x.grad == 12.0
     assert y.grad == 8.0 * math.log(2.0)
 
@@ -208,7 +208,7 @@ def test__scalar__pow__backward_negative_base_integer_exponent() -> None:
     z = x**y
     z.backward()
 
-    # For z = x^y: ∂z/∂x = y * x^(y-1) = 3 * (-2)^2 = 12
+    # For z = x^y: dz/dx = y * x^(y-1) = 3 * (-2)^2 = 12
     assert x.grad == 12.0
 
 
@@ -218,8 +218,8 @@ def test__scalar__pow__backward_negative_base_scalar_exponent() -> None:
     z = x**y
     z.backward()
 
-    # For z = x^y: ∂z/∂x = y * x^(y-1) = 3 * (-2)^2 = 12
-    # For z = x^y: ∂z/∂y = x^y * ln(x) is undefined for x < 0, so grad should be 0
+    # For z = x^y: dz/dx = y * x^(y-1) = 3 * (-2)^2 = 12
+    # For z = x^y: dz/dy = x^y * ln(x) is undefined for x < 0, so grad should be 0
     assert x.grad == 12.0
     assert y.grad == 0.0
 
@@ -230,8 +230,8 @@ def test__scalar__pow__backward_positive_base_scalar_exponent() -> None:
     z = x**y
     z.backward()
 
-    # For z = x^y: ∂z/∂x = y * x^(y-1) = 3 * 2^2 = 12
-    # For z = x^y: ∂z/∂y = x^y * ln(x) = 8 * ln(2)
+    # For z = x^y: dz/dx = y * x^(y-1) = 3 * 2^2 = 12
+    # For z = x^y: dz/dy = x^y * ln(x) = 8 * ln(2)
     assert x.grad == 12.0
     assert y.grad == 8.0 * math.log(2.0)
 
@@ -252,8 +252,8 @@ def test__scalar__backward_simple_chain() -> None:
 
     # Check all gradients are computed correctly
     assert z.grad == 1.0  # Output gradient
-    assert x.grad == 1.0  # ∂z/∂x = 1
-    assert y.grad == 1.0  # ∂z/∂y = 1
+    assert x.grad == 1.0  # dz/dx = 1
+    assert y.grad == 1.0  # dz/dy = 1
 
 
 def test__scalar__backward_complex_expression() -> None:
@@ -264,8 +264,8 @@ def test__scalar__backward_complex_expression() -> None:
     z.backward()
 
     # z = 2*3 + 2^2 = 6 + 4 = 10
-    # ∂z/∂x = y + 2*x = 3 + 2*2 = 7
-    # ∂z/∂y = x = 2
+    # dz/dx = y + 2*x = 3 + 2*2 = 7
+    # dz/dy = x = 2
     assert z.grad == 1.0
     assert x.grad == 7.0
     assert y.grad == 2.0
@@ -279,8 +279,8 @@ def test__scalar__backward_nested_operations() -> None:
     z.backward()
 
     # z = (3+2) * (3-2) = 5 * 1 = 5
-    # ∂z/∂x = (x-y) + (x+y) = 1 + 5 = 6
-    # ∂z/∂y = (x-y) + (x+y) * (-1) = 1 - 5 = -4
+    # dz/dx = (x-y) + (x+y) = 1 + 5 = 6
+    # dz/dy = (x-y) + (x+y) * (-1) = 1 - 5 = -4
     assert z.grad == 1.0
     assert x.grad == 6.0
     assert y.grad == -4.0
@@ -295,12 +295,12 @@ def test__scalar__backward_power_chain() -> None:
     w = u**z  # w = 8^2 = 64
     w.backward()
 
-    # ∂w/∂u = z * u^(z-1) = 2 * 8^1 = 16
-    # ∂u/∂x = y * x^(y-1) = 3 * 2^2 = 12
-    # ∂u/∂y = u * ln(x) = 8 * ln(2)
-    # Chain rule: ∂w/∂x = ∂w/∂u * ∂u/∂x = 16 * 12 = 192
-    # Chain rule: ∂w/∂y = ∂w/∂u * ∂u/∂y = 16 * 8 * ln(2)
-    # ∂w/∂z = w * ln(u) = 64 * ln(8)
+    # dw/du = z * u^(z-1) = 2 * 8^1 = 16
+    # du/dx = y * x^(y-1) = 3 * 2^2 = 12
+    # du/dy = u * ln(x) = 8 * ln(2)
+    # Chain rule: dw/dx = dw/du * du/dx = 16 * 12 = 192
+    # Chain rule: dw/dy = dw/du * du/dy = 16 * 8 * ln(2)
+    # dw/dz = w * ln(u) = 64 * ln(8)
     assert w.grad == 1.0
     assert x.grad == 192.0
     assert y.grad == 16.0 * 8.0 * math.log(2.0)

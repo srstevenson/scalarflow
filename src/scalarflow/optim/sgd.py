@@ -5,7 +5,7 @@ from scalarflow.optim.base import Optimiser
 
 
 class SGD(Optimiser):
-    """Stochastic Gradient Descent optimiser.
+    """Stochastic gradient descent.
 
     This class implements the standard stochastic gradient descent algorithm
     with a fixed learning rate.
@@ -30,6 +30,6 @@ class SGD(Optimiser):
 
     @override
     def step(self) -> None:
-        """Perform a single SGD optimisation step."""
+        """Perform a single optimisation step."""
         for param in self.params:
             param.data -= self.lr * param.grad

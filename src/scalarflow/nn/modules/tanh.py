@@ -5,10 +5,10 @@ from scalarflow.nn.base import Module
 
 
 class Tanh(Module):
-    """Tanh activation function module.
+    """Tanh activation function.
 
-    Applies the hyperbolic tangent function element-wise to input scalars.
-    tanh(x) = (eˣ - e⁻ˣ) / (eˣ + e⁻ˣ).
+    Applies the hyperbolic tangent (exp(x) - exp(-x)) / (exp(x) + exp(-x))
+    element-wise to input scalars x.
     """
 
     @override
@@ -25,7 +25,7 @@ class Tanh(Module):
 
     @override
     def parameters(self) -> list[Scalar]:
-        """Return all trainable parameters in the module.
+        """List trainable parameters in the module.
 
         Returns:
             Empty list as tanh has no trainable parameters.

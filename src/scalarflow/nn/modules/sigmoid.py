@@ -5,10 +5,10 @@ from scalarflow.nn.base import Module
 
 
 class Sigmoid(Module):
-    """Sigmoid activation function module.
+    """Sigmoid activation function.
 
-    Applies the sigmoid function element-wise to input scalars.
-    sigmoid(x) = 1 / (1 + e⁻ˣ).
+    Applies the sigmoid function 1 / (1 + exp(-x)) element-wise to input scalars
+    x.
     """
 
     @override
@@ -25,7 +25,7 @@ class Sigmoid(Module):
 
     @override
     def parameters(self) -> list[Scalar]:
-        """Return all trainable parameters in the module.
+        """List trainable parameters in the module.
 
         Returns:
             Empty list as sigmoid has no trainable parameters.

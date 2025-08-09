@@ -33,7 +33,6 @@ def test__sigmoid__parameters() -> None:
     params = sigmoid.parameters()
 
     # Sigmoid has no trainable parameters
-    assert len(params) == 0
     assert params == []
 
 

@@ -23,13 +23,13 @@ def test__huber_loss__init_invalid_delta(delta: float) -> None:
 def test__huber_loss__quadratic_region() -> None:
     huber = HuberLoss(delta=1.0)
 
-    # Small errors should use quadratic loss: 0.5 * error²
+    # Small errors should use quadratic loss: 0.5 * error^2
     predictions = [Scalar(1.5), Scalar(2.2)]
     targets = [Scalar(1.0), Scalar(2.0)]
     outputs = huber(predictions, targets)
 
-    # Errors: |1.5-1.0| = 0.5, |2.2-2.0| = 0.2 (both ≤ delta=1.0)
-    # Loss: (0.5*0.5² + 0.5*0.2²) / 2 = (0.125 + 0.02) / 2 = 0.0725
+    # Errors: |1.5-1.0| = 0.5, |2.2-2.0| = 0.2 (both <= delta=1.0)
+    # Loss: (0.5*0.5^2 + 0.5*0.2^2) / 2 = (0.125 + 0.02) / 2 = 0.0725
     expected = (0.5 * 0.5**2 + 0.5 * 0.2**2) / 2
     assert len(outputs) == 1
     assert outputs[0].data == pytest.approx(expected)  # pyright: ignore[reportUnknownMemberType]
@@ -38,13 +38,13 @@ def test__huber_loss__quadratic_region() -> None:
 def test__huber_loss__linear_region() -> None:
     huber = HuberLoss(delta=1.0)
 
-    # Large errors should use linear loss: delta * |error| - 0.5 * delta²
+    # Large errors should use linear loss: delta * |error| - 0.5 * delta^2
     predictions = [Scalar(3.0), Scalar(1.0)]
     targets = [Scalar(1.0), Scalar(4.0)]
     outputs = huber(predictions, targets)
 
     # Errors: |3.0-1.0| = 2.0, |1.0-4.0| = 3.0 (both > delta=1.0)
-    # Loss: (1.0*2.0 - 0.5*1.0² + 1.0*3.0 - 0.5*1.0²) / 2 = (1.5 + 2.5) / 2 = 2.0
+    # Loss: (1.0*2.0 - 0.5*1.0^2 + 1.0*3.0 - 0.5*1.0^2) / 2 = (1.5 + 2.5) / 2 = 2.0
     expected = (1.0 * 2.0 - 0.5 * 1.0**2 + 1.0 * 3.0 - 0.5 * 1.0**2) / 2
     assert len(outputs) == 1
     assert outputs[0].data == expected
@@ -59,9 +59,8 @@ def test__huber_loss__boundary_case() -> None:
     outputs = huber(predictions, targets)
 
     # Error: |2.0-1.0| = 1.0 = delta
-    # Quadratic: 0.5 * 1.0² = 0.5
-    # Linear: 1.0 * 1.0 - 0.5 * 1.0² = 0.5
-    # Both give 0.5
+    # Quadratic loss: 0.5 * 1.0^2 = 0.5
+    # Linear loss: 1.0 * 1.0 - 0.5 * 1.0^2 = 0.5
     assert len(outputs) == 1
     assert outputs[0].data == 0.5
 
@@ -73,8 +72,8 @@ def test__huber_loss__mixed_regions() -> None:
     targets = [Scalar(1.0), Scalar(1.0)]
     outputs = huber(predictions, targets)
 
-    # Error 1: |1.5-1.0| = 0.5 ≤ delta → quadratic: 0.5 * 0.5² = 0.125
-    # Error 2: |3.0-1.0| = 2.0 > delta → linear: 1.0 * 2.0 - 0.5 * 1.0² = 1.5
+    # Error 1: |1.5-1.0| = 0.5 <= delta => quadratic: 0.5 * 0.5^2 = 0.125
+    # Error 2: |3.0-1.0| = 2.0 > delta => linear: 1.0 * 2.0 - 0.5 * 1.0^2 = 1.5
     expected = (0.5 * 0.5**2 + 1.0 * 2.0 - 0.5 * 1.0**2) / 2
     assert len(outputs) == 1
     assert outputs[0].data == expected
@@ -163,7 +162,7 @@ def test__huber_loss__gradient_flow_mixed() -> None:
     loss = huber(predictions, targets)[0]
     loss.backward()
 
-    # Error 1: 0.5 ≤ delta, quadratic gradient = error/n = 0.5/2 = 0.25
+    # Error 1: 0.5 <= delta, quadratic gradient = error/n = 0.5/2 = 0.25
     # Error 2: 2.0 > delta, linear gradient = sign(error) * delta / n = 0.5
     assert predictions[0].grad == 0.25
     assert predictions[1].grad == 0.5
@@ -180,8 +179,8 @@ def test__huber_loss__different_deltas() -> None:
     loss_small = huber_small(predictions, targets)[0]
     loss_large = huber_large(predictions, targets)[0]
 
-    # Small delta (0.5): linear loss = 0.5 * 2.0 - 0.5 * 0.5² = 0.875
-    # Large delta (2.0): quadratic loss = 0.5 * 2.0² = 2.0
+    # Small delta (0.5): linear loss = 0.5 * 2.0 - 0.5 * 0.5^2 = 0.875
+    # Large delta (2.0): quadratic loss = 0.5 * 2.0^2 = 2.0
     expected_small = 0.5 * 2.0 - 0.5 * 0.5**2
     expected_large = 0.5 * 2.0**2
 
@@ -204,7 +203,7 @@ def test__huber_loss__integration_with_linear() -> None:
     loss = huber(predictions, targets)[0]
 
     # Error: |6-4| = 2 > delta=1.0
-    # Linear loss: 1.0 * 2 - 0.5 * 1.0² = 1.5
+    # Linear loss: 1.0 * 2 - 0.5 * 1.0^2 = 1.5
     expected_loss = 1.0 * 2 - 0.5 * 1.0**2
     assert loss.data == expected_loss
 
@@ -212,7 +211,7 @@ def test__huber_loss__integration_with_linear() -> None:
     loss.backward()
 
     # Gradient in linear region: sign(error) * delta = 1 * 1.0 = 1.0
-    # ∂loss/∂weight = ∂loss/∂pred * ∂pred/∂weight = 1.0 * 3 = 3.0
-    # ∂loss/∂input = ∂loss/∂pred * ∂pred/∂input = 1.0 * 2 = 2.0
+    # d(loss)/d(weight) = d(loss)/d(pred) * d(pred)/d(weight) = 1.0 * 3 = 3.0
+    # d(loss)/d(input) = d(loss)/d(pred) * d(pred)/d(input) = 1.0 * 2 = 2.0
     assert linear.weights[0][0].grad == 3.0
     assert inputs[0].grad == 2.0

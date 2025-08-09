@@ -1,9 +1,9 @@
-"""Visualisation utilities for automatic differentiation computation graphs.
+"""Visualisation utilities for computation graphs.
 
-This module provides utilities for creating visual representations of
-scalar-based automatic differentiation computation graphs using Graphviz. The
-visualisation shows data nodes as ellipses and operation nodes as boxes, with
-directed edges representing dependencies between computations.
+This module provides utilities for creating visual representations of ScalarFlow
+computation graphs using Graphviz. The visualisation shows data nodes as
+ellipses and operation nodes as boxes, with directed edges representing
+dependencies between computations.
 """
 
 from dataclasses import dataclass
@@ -15,7 +15,7 @@ from scalarflow import Scalar
 
 @dataclass(frozen=True)
 class Graph:
-    """A computation graph representation for automatic differentiation.
+    """A computation graph representation of automatic differentiation.
 
     Attributes:
         nodes: The set of scalar nodes in the computation graph.
@@ -29,10 +29,6 @@ class Graph:
 
 def traverse(root: Scalar) -> Graph:
     """Traverse a computation graph starting from a root scalar.
-
-    This function performs a depth-first traversal of the computation graph
-    starting from the given root scalar, collecting all nodes and edges that can
-    be reached.
 
     Args:
         root: The scalar node to start traversal from.
@@ -55,16 +51,16 @@ def traverse(root: Scalar) -> Graph:
 def visualise(root: Scalar) -> graphviz.Digraph:
     """Create a Graphviz visualisation of a computation graph.
 
-    This function generates a visual representation of the automatic
-    differentiation computation graph using Graphviz. Data nodes are displayed
-    as ellipses with their values and gradients, while operation nodes are shown
-    as boxes. The graph layout flows from left to right.
+    This generates a visual representation of the automatic differentiation
+    computation graph using Graphviz. Data nodes are displayed as ellipses with
+    their values and gradients, while operation nodes are shown as boxes. The
+    graph layout flows from left to right.
 
     Args:
         root: The scalar node to visualise the computation graph from.
 
     Returns:
-        A Graphviz Digraph object that can be rendered or saved to visualise the
+        A Graphviz Digraph that can be rendered or saved to visualise the
         computation graph.
     """
     graph = traverse(root)

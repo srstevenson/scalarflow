@@ -5,10 +5,10 @@ from scalarflow.nn.base import Module
 
 
 class MSELoss(Module):
-    """Mean Squared Error (MSE) loss function module.
+    """Mean squared error.
 
-    Computes the mean squared error between predictions and targets:
-    MSE = (1/n) × Σ(predictions[i] - targets[i])²
+    Computes the mean squared error (1/n) * sum((y_pred_i - y_i)^2) between
+    predictions y_pred and targets y.
     """
 
     @override
@@ -49,7 +49,7 @@ class MSELoss(Module):
 
     @override
     def parameters(self) -> list[Scalar]:
-        """Return all trainable parameters in the module.
+        """List trainable parameters in the module.
 
         Returns:
             Empty list as MSE loss has no trainable parameters.

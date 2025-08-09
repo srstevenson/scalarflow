@@ -11,7 +11,7 @@ def test__mae_loss__forward_pass() -> None:
     targets = [Scalar(1.0), Scalar(3.0), Scalar(2.0)]
     outputs = mae(predictions, targets)
 
-    # MAE = (|2-1| + |3-3| + |1-2|) / 3 = (1 + 0 + 1) / 3 = 2/3
+    # (|2-1| + |3-3| + |1-2|) / 3 = (1 + 0 + 1) / 3 = 2/3
     assert len(outputs) == 1
     assert outputs[0].data == (2.0 / 3.0)
 
@@ -34,7 +34,7 @@ def test__mae_loss__single_value() -> None:
     targets = [Scalar(2.0)]
     outputs = mae(predictions, targets)
 
-    # MAE = |5-2| / 1 = 3
+    # |5-2| / 1 = 3
     assert len(outputs) == 1
     assert outputs[0].data == 3.0
 
@@ -79,11 +79,11 @@ def test__mae_loss__gradient_flow() -> None:
     loss = mae(predictions, targets)[0]
     loss.backward()
 
-    # MAE = (|2-1| + |4-3|) / 2 = (1 + 1) / 2 = 1
+    # (|2-1| + |4-3|) / 2 = (1 + 1) / 2 = 1
     assert loss.data == 1.0
 
-    # ∂MAE/∂pred₁ = sign(pred₁ - target₁) / n = sign(2-1) / 2 = 1/2 = 0.5
-    # ∂MAE/∂pred₂ = sign(pred₂ - target₂) / n = sign(4-3) / 2 = 1/2 = 0.5
+    # d(MAE)/d(pred1) = sign(pred1 - target1) / n = sign(2-1) / 2 = 1/2 = 0.5
+    # d(MAE)/d(pred2) = sign(pred2 - target2) / n = sign(4-3) / 2 = 1/2 = 0.5
     assert predictions[0].grad == 0.5
     assert predictions[1].grad == 0.5
 
@@ -97,11 +97,11 @@ def test__mae_loss__gradient_flow_negative_errors() -> None:
     loss = mae(predictions, targets)[0]
     loss.backward()
 
-    # MAE = (|1-2| + |3-4|) / 2 = (1 + 1) / 2 = 1
+    # (|1-2| + |3-4|) / 2 = (1 + 1) / 2 = 1
     assert loss.data == 1.0
 
-    # ∂MAE/∂pred₁ = sign(pred₁ - target₁) / n = sign(1-2) / 2 = -1/2 = -0.5
-    # ∂MAE/∂pred₂ = sign(pred₂ - target₂) / n = sign(3-4) / 2 = -1/2 = -0.5
+    # d(MAE)/d(pred1) = sign(pred1 - target1) / n = sign(1-2) / 2 = -1/2 = -0.5
+    # d(MAE)/d(pred2) = sign(pred2 - target2) / n = sign(3-4) / 2 = -1/2 = -0.5
     assert predictions[0].grad == -0.5
     assert predictions[1].grad == -0.5
 
@@ -115,11 +115,11 @@ def test__mae_loss__gradient_flow_mixed_errors() -> None:
     loss = mae(predictions, targets)[0]
     loss.backward()
 
-    # MAE = (|3-1| + |1-3|) / 2 = (2 + 2) / 2 = 2
+    # (|3-1| + |1-3|) / 2 = (2 + 2) / 2 = 2
     assert loss.data == 2.0
 
-    # ∂MAE/∂pred₁ = sign(pred₁ - target₁) / n = sign(3-1) / 2 = 1/2 = 0.5
-    # ∂MAE/∂pred₂ = sign(pred₂ - target₂) / n = sign(1-3) / 2 = -1/2 = -0.5
+    # d(MAE)/d(pred1) = sign(pred1 - target1) / n = sign(3-1) / 2 = 1/2 = 0.5
+    # d(MAE)/d(pred2) = sign(pred2 - target2) / n = sign(1-3) / 2 = -1/2 = -0.5
     assert predictions[0].grad == 0.5
     assert predictions[1].grad == -0.5
 
@@ -142,7 +142,7 @@ def test__mae_loss__integration_with_linear() -> None:
     # Backward pass
     loss.backward()
 
-    # ∂loss/∂weight = ∂loss/∂pred * ∂pred/∂weight = 1 * 3 = 3
+    # d(loss)/d(weight) = d(loss)/d(pred) * d(pred)/d(weight) = 1 * 3 = 3
     assert linear.weights[0][0].grad == 3.0
-    # ∂loss/∂input = ∂loss/∂pred * ∂pred/∂input = 1 * 2 = 2
+    # d(loss)/d(input) = d(loss)/d(pred) * d(pred)/d(input) = 1 * 2 = 2
     assert inputs[0].grad == 2.0

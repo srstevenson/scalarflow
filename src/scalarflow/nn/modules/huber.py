@@ -7,11 +7,11 @@ from scalarflow.nn.base import Module
 class HuberLoss(Module):
     """Huber loss function module.
 
-    Combines quadratic loss for small errors and linear loss for large errors:
-    L_δ(y, ŷ) = {
-        0.5 * (y - ŷ)²           if |y - ŷ| ≤ δ
-        δ * |y - ŷ| - 0.5 * δ²   if |y - ŷ| > δ
-    }
+    This combines quadratic loss for small errors and a linear loss for large
+    errors:
+
+    L_delta(y, p) = { 0.5 * (y-p)^2                   if |y-p| <= delta
+                    { delta * |y-p| - 0.5 * delta^2   if |y-p| > delta
 
     This provides smooth gradients near zero (like MSE) while being robust
     to outliers (like MAE).
@@ -80,9 +80,8 @@ class HuberLoss(Module):
         error = prediction - target
         abs_error = error.abs()
 
-        # Use the quadratic loss when |error| <= δ, and add the linear excess
-        # when |error| > δ i.e.
-        # min(0.5*error², 0.5*δ²) + δ*max(0, |error| - δ)
+        # Use the quadratic loss when |error| <= delta, and add the linear
+        # excess when |error| > delta.
         quadratic_part = 0.5 * error * error
         clamped_quadratic = quadratic_part.min(0.5 * self.delta**2)
 
@@ -92,7 +91,7 @@ class HuberLoss(Module):
 
     @override
     def parameters(self) -> list[Scalar]:
-        """Return all trainable parameters in the module.
+        """List trainable parameters in the module.
 
         Returns:
             Empty list as Huber loss has no trainable parameters.

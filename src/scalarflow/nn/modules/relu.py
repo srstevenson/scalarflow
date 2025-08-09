@@ -7,8 +7,7 @@ from scalarflow.nn.base import Module
 class ReLU(Module):
     """ReLU activation function module.
 
-    Applies the Rectified Linear Unit function element-wise to input scalars.
-    ReLU(x) = max(0, x).
+    Applies the rectified linear unit max(0, x) element-wise to input scalars x.
     """
 
     @override
@@ -25,7 +24,7 @@ class ReLU(Module):
 
     @override
     def parameters(self) -> list[Scalar]:
-        """Return all trainable parameters in the module.
+        """List trainable parameters in the module.
 
         Returns:
             Empty list as ReLU has no trainable parameters.

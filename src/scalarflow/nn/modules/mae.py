@@ -5,17 +5,17 @@ from scalarflow.nn.base import Module
 
 
 class MAELoss(Module):
-    """Mean Absolute Error (MAE) loss function module.
+    """Mean absolute error.
 
-    Computes the mean absolute error between predictions and targets:
-    MAE = (1/n) × Σ|predictions[i] - targets[i]|
+    Computes the mean absolute error (1/n) * sum(|y_pred_i - y_i|) between
+    predictions y_pred and targets y.
     """
 
     @override
     def __call__(
         self, predictions: list[Scalar], targets: list[Scalar]
     ) -> list[Scalar]:
-        """Compute the mean absolute error loss.
+        """Compute the mean absolute error.
 
         Args:
             predictions: List of predicted scalars.
@@ -49,7 +49,7 @@ class MAELoss(Module):
 
     @override
     def parameters(self) -> list[Scalar]:
-        """Return all trainable parameters in the module.
+        """List trainable parameters in the module.
 
         Returns:
             Empty list as MAE loss has no trainable parameters.

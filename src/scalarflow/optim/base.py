@@ -4,11 +4,11 @@ from scalarflow import Scalar
 
 
 class Optimiser(ABC):
-    """Abstract base class for optimisers.
+    """Base class for optimisers.
 
-    This class defines the interface for all optimisation algorithms in
-    ScalarFlow. Concrete optimiser implementations should inherit from this
-    class and implement the required abstract methods.
+    This class defines the interface for optimisation algorithms. Concrete
+    implementations should inherit from this class and implement the abstract
+    methods.
     """
 
     def __init__(self, params: list[Scalar]) -> None:
@@ -32,13 +32,10 @@ class Optimiser(ABC):
         """Clear gradients of all parameters.
 
         This method resets the gradients of all parameters managed by this
-        optimiser to zero, preparing for the next backward pass. It uses
-        each parameter's zero_grad method to clear gradients throughout the
-        computation graph.
+        optimiser to zero, preparing for the next backward pass.
         """
         for param in self.params:
-            # It's important to call Scalar.zero_grad instead of setting
-            # Scalar.grad to zero, so that we clear gradients for the entire
-            # computation graph and not just the trainable parameters, which
-            # would omit intermediate computations.
+            # Call Scalar.zero_grad instead of setting Scalar.grad to zero to
+            # clear gradients for the entire computation graph and not just the
+            # trainable parameters, which would omit intermediate computations.
             param.zero_grad()
