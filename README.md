@@ -43,11 +43,11 @@ optimiser.zero_grad()
 print(f"Loss: {loss.data:.4f}")
 ```
 
-For a more complete example, see
-[`examples/regression.py`](examples/regression.py). This example demonstrates a
-training loop that learns to approximate the quadratic function $y = x^2$ using
-a model with a single hidden layer. The model is trained over 1000 epochs using
-stochastic gradient descent on randomly generated data.
+For more complete examples, see
+[`examples/regression.py`](examples/regression.py) and
+[`examples/classification.py`](examples/classification.py). The regression
+example demonstrates a training loop that learns to approximate the quadratic
+function $y = x^2$ using a model with a single hidden layer.
 
 ```
 $ uv run examples/regression.py
@@ -64,6 +64,21 @@ Epoch | Train Loss | Train RMSE | Val Loss | Val RMSE
   800 |     0.0258 |     0.1607 |   0.0078 |   0.0881
   900 |     0.0190 |     0.1379 |   0.0048 |   0.0693
  1000 |     0.0144 |     0.1199 |   0.0028 |   0.0528
+```
+
+The classification example trains a similar model to classify two concentric
+circles, showing binary classification with non-linearly separable data.
+
+```
+$ uv run examples/classification.py
+Epoch | Train Loss | Train Acc | Val Loss | Val Acc
+----- | ---------- | --------- | -------- | -------
+    0 |     0.7620 |     0.480 |   0.6522 |   0.560
+   10 |     0.6182 |     0.480 |   0.5178 |   0.560
+   20 |     0.5522 |     0.680 |   0.4538 |   0.725
+   30 |     0.0704 |     0.995 |   0.0571 |   1.000
+   40 |     0.0375 |     0.997 |   0.0309 |   1.000
+   50 |     0.0264 |     0.997 |   0.0216 |   1.000
 ```
 
 ## Development
