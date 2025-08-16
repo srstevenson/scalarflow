@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
 
-from scalarflow import Scalar
+if TYPE_CHECKING:
+    from scalarflow import Scalar
 
 
 class Module(ABC):

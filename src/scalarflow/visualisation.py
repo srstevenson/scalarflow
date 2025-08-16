@@ -7,10 +7,12 @@ dependencies between computations.
 """
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 import graphviz  # pyright: ignore[reportMissingTypeStubs]
 
-from scalarflow import Scalar
+if TYPE_CHECKING:
+    from scalarflow import Scalar
 
 
 @dataclass(frozen=True)

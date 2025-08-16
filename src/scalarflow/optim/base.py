@@ -1,7 +1,10 @@
 from abc import ABC, abstractmethod
-from collections.abc import Sequence
+from typing import TYPE_CHECKING
 
-from scalarflow import Scalar
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+    from scalarflow import Scalar
 
 
 class Optimiser(ABC):

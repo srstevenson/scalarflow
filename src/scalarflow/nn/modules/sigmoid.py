@@ -1,7 +1,9 @@
-from typing import override
+from typing import TYPE_CHECKING, override
 
-from scalarflow import Scalar
 from scalarflow.nn.base import Module
+
+if TYPE_CHECKING:
+    from scalarflow import Scalar
 
 
 class Sigmoid(Module):

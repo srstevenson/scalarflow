@@ -1,8 +1,11 @@
-from collections.abc import Sequence
-from typing import override
+from typing import TYPE_CHECKING, override
 
-from scalarflow import Scalar
 from scalarflow.optim.base import Optimiser
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+    from scalarflow import Scalar
 
 
 class SGD(Optimiser):
