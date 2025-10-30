@@ -49,7 +49,7 @@ For more complete examples, see
 example demonstrates a training loop that learns to approximate the quadratic
 function $y = x^2$ using a model with a single hidden layer.
 
-```
+```text
 $ uv run examples/regression.py
 Epoch | Train Loss | Train RMSE | Val Loss | Val RMSE
 ----- | ---------- | ---------- | -------- | --------
@@ -69,7 +69,7 @@ Epoch | Train Loss | Train RMSE | Val Loss | Val RMSE
 The classification example trains a similar model to classify two concentric
 circles, showing binary classification with non-linearly separable data.
 
-```
+```text
 $ uv run examples/classification.py
 Epoch | Train Loss | Train Acc | Val Loss | Val Acc
 ----- | ---------- | --------- | -------- | -------
