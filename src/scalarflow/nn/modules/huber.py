@@ -1,3 +1,5 @@
+"""Huber loss."""
+
 from typing import override
 
 from scalarflow import Scalar

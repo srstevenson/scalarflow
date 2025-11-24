@@ -1,3 +1,5 @@
+"""Optimisation module."""
+
 from scalarflow.optim.base import Optimiser
 from scalarflow.optim.sgd import SGD
 

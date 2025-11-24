@@ -1,3 +1,5 @@
+"""Initialisation schemes."""
+
 import math
 import random
 from enum import Enum

@@ -1,3 +1,5 @@
+"""ReLU."""
+
 from typing import TYPE_CHECKING, override
 
 from scalarflow.nn.base import Module

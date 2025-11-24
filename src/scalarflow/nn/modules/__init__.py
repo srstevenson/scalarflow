@@ -1,3 +1,5 @@
+"""Neural network modules."""
+
 from scalarflow.nn.modules.bce import BCELoss
 from scalarflow.nn.modules.huber import HuberLoss
 from scalarflow.nn.modules.linear import Linear

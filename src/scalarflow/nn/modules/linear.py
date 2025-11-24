@@ -1,3 +1,5 @@
+"""Linear layer."""
+
 from functools import partial
 from typing import override
 

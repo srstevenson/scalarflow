@@ -1,3 +1,5 @@
+"""SGD optimiser."""
+
 from typing import TYPE_CHECKING, override
 
 from scalarflow.optim.base import Optimiser

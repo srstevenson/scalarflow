@@ -1,3 +1,5 @@
+"""Binary cross entropy loss."""
+
 from typing import override
 
 from scalarflow import Scalar
@@ -24,7 +26,7 @@ class BCELoss(Module):
         """Compute the binary cross entropy loss.
 
         Args:
-            predictions: List of predicted probabilities (scalars in (0, 1)).
+            preds: List of predicted probabilities (scalars in (0, 1)).
             targets: List of target labels (0 or 1) as scalars.
 
         Returns:
@@ -54,6 +56,6 @@ class BCELoss(Module):
         """List trainable parameters in the module.
 
         Returns:
-            list[Scalar]: Empty list as BCE loss has no trainable parameters.
+            Empty list as BCE loss has no trainable parameters.
         """
         return []
