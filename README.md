@@ -83,11 +83,11 @@ Epoch | Train Loss | Train Acc | Val Loss | Val Acc
 
 ## Development
 
-ScalarFlow uses [uv] for dependency management. Install the library and its
-dependencies with:
+ScalarFlow uses [uv] for dependency management, and [Just] for task
+orchestration. Install the library and its dependencies with:
 
 ```bash
-make install
+uv sync
 ```
 
 ScalarFlow requires [Graphviz] for visualisation functionality. Install Graphviz
@@ -104,15 +104,16 @@ pacman -Syu graphviz
 apt install graphviz
 ```
 
-Format with [Ruff], lint with Ruff and [ty], and test with [pytest] using:
+Format and lint with [Ruff], type-check with [ty], and test with [pytest] using:
 
 ```bash
-make all
+just fmt lint test
 ```
 
-Run `make help` to see a list of all available commands.
+Run `just help` to see a list of all available commands.
 
 [Graphviz]: https://graphviz.org/
+[Just]: https://github.com/casey/just
 [micrograd]: https://github.com/karpathy/micrograd
 [pytest]: https://docs.pytest.org/
 [PyTorch]: https://pytorch.org
