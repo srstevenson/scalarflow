@@ -25,7 +25,7 @@ def test__bce_loss__forward_pass() -> None:
 
     expected = _mean_bce([0.9, 0.2, 0.7], [1.0, 0.0, 1.0])
     assert len(outputs) == 1
-    assert outputs[0].data == pytest.approx(expected)  # pyright: ignore[reportUnknownMemberType]
+    assert outputs[0].data == pytest.approx(expected)
 
 
 def test__bce_loss__single_value() -> None:
@@ -37,7 +37,7 @@ def test__bce_loss__single_value() -> None:
 
     expected = _mean_bce([0.8], [1.0])
     assert len(outputs) == 1
-    assert outputs[0].data == pytest.approx(expected)  # pyright: ignore[reportUnknownMemberType]
+    assert outputs[0].data == pytest.approx(expected)
 
 
 def test__bce_loss__empty_inputs() -> None:
@@ -79,10 +79,10 @@ def test__bce_loss__backward() -> None:
     loss = bce(predictions, targets)[0]
     loss.backward()
 
-    assert loss.data == pytest.approx(_mean_bce([0.8, 0.3], [1.0, 0.0]))  # pyright: ignore[reportUnknownMemberType]
+    assert loss.data == pytest.approx(_mean_bce([0.8, 0.3], [1.0, 0.0]))
 
     # dL/dp = (-(y/p) + (1-y)/(1-p)) / n
     grad1 = (-(1.0 / 0.8) + 0.0) / 2.0
     grad2 = (-(0.0) + 1.0 / (1.0 - 0.3)) / 2.0
-    assert predictions[0].grad == pytest.approx(grad1)  # pyright: ignore[reportUnknownMemberType]
-    assert predictions[1].grad == pytest.approx(grad2)  # pyright: ignore[reportUnknownMemberType]
+    assert predictions[0].grad == pytest.approx(grad1)
+    assert predictions[1].grad == pytest.approx(grad2)

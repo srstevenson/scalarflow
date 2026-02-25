@@ -9,7 +9,7 @@ dependencies between computations.
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-import graphviz  # pyright: ignore[reportMissingTypeStubs]
+import graphviz
 
 if TYPE_CHECKING:
     from scalarflow import Scalar
@@ -68,19 +68,19 @@ def visualise(root: Scalar) -> graphviz.Digraph:
     graph = traverse(root)
 
     dot = graphviz.Digraph()
-    dot.attr(rankdir="LR")  # pyright: ignore[reportUnknownMemberType]
+    dot.attr(rankdir="LR")
 
     for node in graph.nodes:
-        dot.node(  # pyright: ignore[reportUnknownMemberType]
+        dot.node(
             f"data_{id(node)}",
             shape="ellipse",
             label=f"data={node.data:.4f}, grad={node.grad:.4f}",
         )
         if node.op:
-            dot.node(f"op_{id(node)}", shape="box", label=node.op)  # pyright: ignore[reportUnknownMemberType]
-            dot.edge(f"op_{id(node)}", f"data_{id(node)}")  # pyright: ignore[reportUnknownMemberType]
+            dot.node(f"op_{id(node)}", shape="box", label=node.op)
+            dot.edge(f"op_{id(node)}", f"data_{id(node)}")
 
     for parent, child in graph.edges:
-        dot.edge(f"data_{id(parent)}", f"op_{id(child)}")  # pyright: ignore[reportUnknownMemberType]
+        dot.edge(f"data_{id(parent)}", f"op_{id(child)}")
 
     return dot

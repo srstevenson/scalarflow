@@ -104,8 +104,7 @@ pacman -Syu graphviz
 apt install graphviz
 ```
 
-Format with [Ruff], lint with Ruff and [basedpyright], and test with [pytest]
-using:
+Format with [Ruff], lint with Ruff and [ty], and test with [pytest] using:
 
 ```bash
 make all
@@ -113,10 +112,10 @@ make all
 
 Run `make help` to see a list of all available commands.
 
-[basedpyright]: https://docs.basedpyright.com/
 [Graphviz]: https://graphviz.org/
 [micrograd]: https://github.com/karpathy/micrograd
 [pytest]: https://docs.pytest.org/
 [PyTorch]: https://pytorch.org
 [Ruff]: https://docs.astral.sh/ruff/
+[ty]: https://docs.astral.sh/ty/
 [uv]: https://docs.astral.sh/uv/

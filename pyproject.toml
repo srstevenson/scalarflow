@@ -8,28 +8,24 @@ requires-python = ">=3.14"
 dependencies = ["graphviz>=0.21"]
 
 [dependency-groups]
-dev = [
-  "basedpyright>=1.31.0",
-  "coverage>=7.10.1",
-  "pytest>=8.4.1",
-  "ruff>=0.12.5",
-]
+dev = ["coverage>=7.10.1", "pytest>=8.4.1", "ruff>=0.12.5", "ty>=0.0.18"]
 
 [build-system]
 requires = ["uv_build>=0.9.5,<0.10.0"]
 build-backend = "uv_build"
 
-[tool.basedpyright]
-typeCheckingMode = "recommended"
-reportUnusedCallResult = false
-reportImplicitStringConcatenation = false
-
 [tool.ruff.format]
+docstring-code-format = true
 skip-magic-trailing-comma = true
 
 [tool.ruff.lint]
-ignore = ["COM812", "EM101", "EM102", "FIX002", "S311", "TD003", "TRY003"]
 select = ["ALL"]
+ignore = [
+  "COM812", # Trailing comma missing
+  "EM102",  # Exception must not use an f-string literal, assign to variable first
+  "S311",   # Standard pseudo-random generators are not suitable for cryptographic purposes
+  "TRY003", # Avoid specifying long messages outside the exception class
+]
 allowed-confusables = ["×"]
 
 [tool.ruff.lint.flake8-tidy-imports]
@@ -39,8 +35,17 @@ ban-relative-imports = "all"
 split-on-trailing-comma = false
 
 [tool.ruff.lint.per-file-ignores]
-"examples/**.py" = ["T201"]
-"tests/**.py" = ["D", "PLR2004", "S101"]
+"examples/**.py" = [
+  "T201", # print found
+]
+"tests/**.py" = [
+  "D",       # pydocstyle
+  "PLR2004", # Magic value used in comparison
+  "S101",    # Use of assert detected
+]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
+[tool.ty.rules]
+all = "error"

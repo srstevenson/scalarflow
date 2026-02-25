@@ -32,7 +32,7 @@ def test__huber_loss__quadratic_region() -> None:
     # Loss: (0.5*0.5^2 + 0.5*0.2^2) / 2 = (0.125 + 0.02) / 2 = 0.0725
     expected = (0.5 * 0.5**2 + 0.5 * 0.2**2) / 2
     assert len(outputs) == 1
-    assert outputs[0].data == pytest.approx(expected)  # pyright: ignore[reportUnknownMemberType]
+    assert outputs[0].data == pytest.approx(expected)
 
 
 def test__huber_loss__linear_region() -> None:
@@ -133,8 +133,8 @@ def test__huber_loss__backward_quadratic() -> None:
     # Both errors are in quadratic region
     # Error 1: 0.5, gradient = error/n = 0.5/2 = 0.25
     # Error 2: 0.2, gradient = error/n = 0.2/2 = 0.1
-    assert predictions[0].grad == pytest.approx(0.25)  # pyright: ignore[reportUnknownMemberType]
-    assert predictions[1].grad == pytest.approx(0.1)  # pyright: ignore[reportUnknownMemberType]
+    assert predictions[0].grad == pytest.approx(0.25)
+    assert predictions[1].grad == pytest.approx(0.1)
 
 
 def test__huber_loss__backward_linear() -> None:

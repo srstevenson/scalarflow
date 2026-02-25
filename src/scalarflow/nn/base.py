@@ -16,7 +16,7 @@ class Module(ABC):
     """
 
     @abstractmethod
-    def __call__(self, *args, **kwargs) -> list[Scalar]:  # pyright: ignore[reportUnknownParameterType, reportMissingParameterType]  # noqa: ANN002, ANN003
+    def __call__(self, *args, **kwargs) -> list[Scalar]:  # noqa: ANN002, ANN003
         """Forward pass through the module.
 
         This method should implement the forward computation of the module,
